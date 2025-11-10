@@ -1,0 +1,8 @@
+RewriteEngine On
+
+# Get current directory name dynamically
+RewriteCond %{REQUEST_URI} !^%{REQUEST_URI}/?$
+RewriteCond %{REQUEST_URI} !/index\.php$ [NC]
+RewriteCond %{REQUEST_URI} !/$ [NC]
+RewriteCond %{REQUEST_URI} !/app/ [NC]
+RewriteRule ^ - [F,L]

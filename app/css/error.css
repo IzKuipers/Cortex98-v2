@@ -1,0 +1,40 @@
+body {
+    text-align: center;
+}
+
+div.error-wrapper {
+    text-align: left;
+    width: 300px;
+    background-color: #ffffaa;
+    border: #ffffaa 2px outset;
+    margin-top: 70px;
+}
+
+div.error-wrapper div.error-body {
+    padding: 10px;
+}
+
+div.error-wrapper h1 {
+    margin-bottom: 10px;
+}
+
+div.error-wrapper p { 
+    margin-bottom: 20px;
+}
+
+div.error-wrapper div.error-actions {
+    display:block;
+    border-top: #c7c774 1px solid;
+    text-align: right;
+    padding: 5px;
+}
+div.error-wrapper div.error-actions a {
+    display:inline-block;
+    padding: 2px 5px;
+    background-color: gray;
+    color: white;
+    text-decoration: none;
+}
+div.error-wrapper div.error-actions a:hover {
+    background-color: purple;
+}

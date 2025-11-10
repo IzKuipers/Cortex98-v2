@@ -1,0 +1,5 @@
+<?php
+
+require_once ("lib/error.php");
+
+error_message("Logged out","You've been logged out successfully.","login.php","Log back in");
