@@ -15,13 +15,13 @@ function we_are_offline() {
     die;
 }
 
-function error_message(string $title, string $message, string $return_url = "index.php", string $link = "") {
+function error_message(string $title, string $message, string $return_url = "index.php", string $link = "Go back") {
     start_session_if_needed();
 
     $_SESSION["error_title"] = $title;
     $_SESSION["error_message"] = $message;
     $_SESSION["error_return"] = $return_url;
-    if ($link) $_SESSION["error_link"] = $link;
+    $_SESSION["error_link"] = $link;
 
     header("location: " . WEB_ROOT . "/error.php");
 }

@@ -2,3 +2,8 @@ html,
 body {
   font: 8pt/10pt verdana;
 }
+
+
+table {
+    text-align: left;
+}

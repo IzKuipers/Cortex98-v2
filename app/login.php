@@ -1,5 +1,6 @@
 <?php
 
+require_once("./components/headerbar.php");
 require_once("lib/session.php");
 require_once("lib/error.php");
 
@@ -25,37 +26,41 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST["username"], $_POST["p
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/login.css">
     <title>Log in to Cortex 98</title>
 </head>
 
-<body>
-    <form action="" method="POST">
-        <table width="100%">
-            <colgroup>
-                <col />
-                <col width="30%" />
-            </colgroup>
-            <tr>
-                <td><b>Username:</b></td>
-                <td><input type="text" name="username"></td>
-            </tr>
-            <tr>
-                <td><b>Password:</b></td>
-                <td><input type="password" name="password"></td>
-            </tr>
-            <tr>
-                <td>
-                    <br>
-                    <a href="register.php">Register</a>
-                </td>
-                <td align="right">
-                    <br>
-                    <button type="submit">Log in</button>
-                </td>
-            </tr>
-        </table>
-    </form>
-
+<body class="login-page">
+    <center>
+        <?= HeaderBar() ?>
+        <p>Please log in to continue to Cortex 98. If you don't yet have an account, click <b>Register</b>.</p>
+        <form action="" method="POST">
+            <table width="300">
+                <colgroup>
+                    <col />
+                    <col width="180" />
+                </colgroup>
+                <tr>
+                    <td><b>Username:</b></td>
+                    <td align="right"><input type="text" name="username"></td>
+                </tr>
+                <tr>
+                    <td><b>Password:</b></td>
+                    <td align="right"><input type="password" name="password"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <br>
+                        <a href="register.php">Register</a>
+                    </td>
+                    <td align="right">
+                        <br>
+                        <button type="submit">Log in</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </center>
 </body>
 
 </html>

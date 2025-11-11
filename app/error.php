@@ -1,5 +1,6 @@
 <?php
 
+require_once("components/headerbar.php");
 require_once("lib/session.php");
 require_once("lib/error.php");
 
@@ -30,15 +31,18 @@ if (isset($_SESSION["error_link"]))
 </head>
 
 <body>
-    <div class="error-wrapper">
-        <div class="error-body">
-            <h1><?= $title ?></h1>
-            <p><?= $message ?></p>
+    <center>
+        <?= HeaderBar() ?>
+        <div class="error-wrapper">
+            <div class="error-body">
+                <h1><?= $title ?></h1>
+                <p><?= $message ?></p>
+            </div>
+            <div class="error-actions">
+                <a href="<?= $return ?>" role="button"><?= $link ?></a>
+            </div>
         </div>
-        <div class="error-actions">
-            <a href="<?= $return ?>" role="button"><?= $link ?></a>
-        </div>
-    </div>
+    </center>
 </body>
 
 </html>

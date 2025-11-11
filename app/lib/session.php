@@ -106,8 +106,6 @@ function login(string $username, string $password)
         $statement->bind_result($user_id, $hash);
         $statement->fetch();
 
-        echo $hash . " " . $password;
-
         if (!$user_id)
             throw new Exception("No user with username " . $username);
 
@@ -122,7 +120,6 @@ function login(string $username, string $password)
 
         return $token;
     } catch (Exception $e) {
-        echo $e->getMessage();
         return null;
     } finally {
         disconnect_db($conn, $statement);

@@ -1,40 +1,39 @@
-body {
-    text-align: center;
-}
-
 div.error-wrapper {
-    text-align: left;
-    width: 300px;
-    background-color: #ffffaa;
-    border: #ffffaa 2px outset;
-    margin-top: 70px;
+  padding: 10px;
+  background: #ffffcc;
+  width: 300px;
+  border: #ffffaa 1px outset;
+  margin-top: 30px;
 }
 
 div.error-wrapper div.error-body {
-    padding: 10px;
+  padding: 10px;
+  text-align: left;
 }
 
 div.error-wrapper h1 {
-    margin-bottom: 10px;
+  margin: 0;
+  margin-bottom: 10px;
+  font-size: 13px;
 }
 
-div.error-wrapper p { 
-    margin-bottom: 20px;
+div.error-wrapper p {
+  margin: 0;
+  margin-bottom: 20px;
 }
 
 div.error-wrapper div.error-actions {
-    display:block;
-    border-top: #c7c774 1px solid;
-    text-align: right;
-    padding: 5px;
+  display: block;
+  text-align: right;
+  padding: 5px;
 }
 div.error-wrapper div.error-actions a {
-    display:inline-block;
-    padding: 2px 5px;
-    background-color: gray;
-    color: white;
-    text-decoration: none;
+  display: inline-block;
+  padding: 2px 5px;
+  background-color: gray;
+  color: white;
+  text-decoration: none;
 }
 div.error-wrapper div.error-actions a:hover {
-    background-color: purple;
+  background-color: purple;
 }
