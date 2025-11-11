@@ -1,0 +1,28 @@
+body.links-page div.link p.name {
+    font-size: 10pt;
+    margin:0;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+body.links-page div.link  {
+    margin-bottom: 10px;
+}
+
+body.links-page div.link p.name span.clicks {
+    font-weight: normal;
+    color: gray;
+}
+
+body.links-page div.link hr {
+    margin: 0;
+}
+
+body.links-page div.link p.description {
+    margin: 5px 0;
+    /* margin-bottom: 5px; */
+}
+body.links-page div.link p.stats {
+    margin: 0;
+    margin-bottom: 5px;
+    color: gray
+}

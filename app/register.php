@@ -43,10 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST["username"], $_POST["p
         <p>Create an account to continue to Cortex 98. If you already have an account, click <b>Log in</b>.</p>
         <form action="" method="POST">
             <table width="300">
-                <colgroup>
-                    <col />
-                    <col width="180" />
-                </colgroup>
                 <tr>
                     <td><b>Username:</b></td>
                     <td align="right"><input type="text" name="username"></td>

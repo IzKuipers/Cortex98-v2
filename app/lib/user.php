@@ -4,6 +4,7 @@ require_once("db.php");
 
 function create_user(string $username, string $password): CreateUserResult
 {
+    $username = strtolower($username);
     $existing = get_user_by_name($username);
 
     if ($existing) return CreateUserResult::UserExists;
@@ -44,6 +45,7 @@ $CreateUserResultCaptions = [
 
 function get_user_by_name(string $username)
 {
+    $username = strtolower($username);
     $conn = connect_db();
 
     if (!$conn)
@@ -73,6 +75,7 @@ function get_user_by_name(string $username)
 }
 
 function delete_user_by_name(string $username) {
+    $username = strtolower($username);
     $conn = connect_db();
 
     if (!$conn)

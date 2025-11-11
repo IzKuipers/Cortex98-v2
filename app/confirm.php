@@ -6,17 +6,24 @@ require_once("lib/error.php");
 
 start_session_if_needed();
 
-if (!isset($_SESSION["error_title"], $_SESSION["error_message"], $_SESSION["error_return"]))
+if (
+    !isset(
+    $_SESSION["confirm_title"],
+    $_SESSION["confirm_message"],
+    $_SESSION["confirm_confirm_url"],
+    $_SESSION["confirm_cancel_url"],
+    $_SESSION["confirm_confirm_caption"],
+    $_SESSION["confirm_confirm_caption"]
+)
+)
     header("location: index.php");
 
-$title = $_SESSION["error_title"];
-$message = $_SESSION["error_message"];
-$return = $_SESSION["error_return"];
-
-$link = "Go back";
-
-if (isset($_SESSION["error_link"]))
-    $link = $_SESSION["error_link"];
+$title = $_SESSION["confirm_title"];
+$message = $_SESSION["confirm_message"];
+$confirm_url = $_SESSION["confirm_confirm_url"];
+$cancel_url = $_SESSION["confirm_cancel_url"];
+$confirm_caption = $_SESSION["confirm_confirm_caption"];
+$cancel_caption = $_SESSION["confirm_cancel_caption"];
 
 ?>
 <!DOCTYPE html>
@@ -38,7 +45,8 @@ if (isset($_SESSION["error_link"]))
                 <p><?= $message ?></p>
             </div>
             <div class="error-actions">
-                <a href="<?= $return ?>" role="button"><?= $link ?></a>
+                <a href="<?= $cancel_url ?>"><?= $cancel_caption ?></a>
+                <a href="<?= $confirm_url ?>"><?= $confirm_caption ?></a>
             </div>
         </div>
     </center>

@@ -9,8 +9,8 @@ function HeaderBar()
     $username = $session ? $session["username"] : "Stranger";
 
     $links = $session ? <<<HTML
-     - <a href="logout.php">Log out</a>
-     - <a href="account.php">Account</a>
+     - <a href="account/logout.php">Log out</a>
+     - <a href="account/account.php">Account</a>
     HTML : "";
 
     return <<<HTML

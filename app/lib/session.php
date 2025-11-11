@@ -89,6 +89,7 @@ function delete_token_by_value(string $value): void
 
 function login(string $username, string $password)
 {
+    $username = strtolower($username);
     start_session_if_needed();
 
     try {
@@ -136,7 +137,7 @@ function logout()
     delete_token_by_value($_SESSION["token"]);
     unset($_SESSION["token"]);
 
-    header("location: " . WEB_ROOT . "/loggedout.php");
+    header("location: " . WEB_ROOT . "/account/loggedout.php");
 }
 
 function start_session_if_needed()

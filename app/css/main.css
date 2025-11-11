@@ -3,7 +3,13 @@ body {
   font: 8pt/10pt verdana;
 }
 
-
 table {
-    text-align: left;
+  text-align: left;
+  font: 8pt/10pt verdana;
+}
+
+ul {
+    padding: 0;
+    margin: 10px 0;
+    margin-left: 30px;
 }
