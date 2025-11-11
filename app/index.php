@@ -149,6 +149,9 @@ $links = array_slice(get_all_links(), 0, 3);
                 </td>
             </tr>
         </table>
+        <p style="color: gray;">
+            The administrators of this web site reserve the right to remove inappropriate or illegal content. <a href="legal.php">Legal</a>
+        </p>
     </center>
 </body>
 

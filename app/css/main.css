@@ -3,6 +3,10 @@ body {
   font: 8pt/10pt verdana;
 }
 
+body {
+    background: url("../assets/test.gif") repeat;
+}
+
 table {
   text-align: left;
   font: 8pt/10pt verdana;

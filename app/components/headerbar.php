@@ -14,10 +14,10 @@ function HeaderBar()
     HTML : "";
 
     return <<<HTML
-    <table border="0" cellpadding="2" cellspacing="0" width="600">
+    <table border="0" cellpadding="8" cellspacing="0" width="600" bgcolor="#ffffff">
         <tr>
             <td width="25%">
-                    <img src="assets/c98banner.gif" alt="" height="32" width="250">
+                    <img src="assets/c98banner.gif" alt="" height="32" width="250" style="vertical-align: middle;">
             </td>
             <td align="right" nowrap>
                 <span>Welcome, <b>$username</b></span>

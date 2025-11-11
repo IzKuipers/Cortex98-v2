@@ -56,6 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST["username"], $_POST["p
                 </tr>
             </table>
         </form>
+        <p style="color: gray;">A screen with a resolution of 800x600 and 256 colors is recommended.<br>This site is designed to work on Internet Explorer 5.<br><br>© 1999 IzKuipers. All Rights Reserved.</p>
     </center>
 </body>
 
