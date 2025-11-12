@@ -166,7 +166,11 @@ function logout()
 
 function start_session_if_needed()
 {
-    session_set_cookie_params(SESSION_LIFETIME, SESSION_PATH, SESSION_DOMAIN, SESSION_SECURE, SESSION_HTTPONLY);
+    try {
+        session_set_cookie_params(SESSION_LIFETIME, SESSION_PATH, SESSION_DOMAIN, SESSION_SECURE, SESSION_HTTPONLY);
+    } catch (Exception $e) {
+        // fail quietly
+    }
 
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
