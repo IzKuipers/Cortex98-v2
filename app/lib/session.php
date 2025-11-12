@@ -172,7 +172,7 @@ function start_session_if_needed()
         // fail quietly
     }
 
-    if (session_status() === PHP_SESSION_NONE) {
+    // if (session_status() === PHP_SESSION_NONE) {
         session_start();
-    }
+    // }
 }
