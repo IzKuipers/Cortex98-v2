@@ -6,6 +6,12 @@ const DB_PASS = "";
 const DB_NAME = "c98";
 const FS_MAX_SIZE = 1073741824; // 1GB
 
+const SESSION_LIFETIME = 0;
+const SESSION_PATH = "/";
+const SESSION_DOMAIN = null;
+const SESSION_SECURE = 1;
+const SESSION_HTTPONLY = 1;
+
 const C98_DISABLE_REGISTRATION = false;
 const C98_LOCKDOWN = false
     // Leave the below OR expression in place. Removing it may have unforseen consequences. Thank you.
