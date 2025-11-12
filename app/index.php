@@ -8,7 +8,7 @@ require_once("./components/navigation.php");
 
 $start_time = date_create()->format('Uv');
 
-// verify_loggedin();
+verify_loggedin();
 
 $session = get_user_from_session();
 $links = array_slice(get_all_links(), 0, 3);
