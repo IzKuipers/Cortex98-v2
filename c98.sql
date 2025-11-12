@@ -1,12 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.3
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Nov 10, 2025 at 06:49 PM
--- Server version: 11.8.3-MariaDB-0+deb13u1 from Debian
--- PHP Version: 8.4.11
+-- Host: 127.0.0.1
+-- Generation Time: Nov 12, 2025 at 09:07 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -20,7 +21,7 @@ SET time_zone = "+00:00";
 -- Database: `c98`
 --
 CREATE DATABASE IF NOT EXISTS `c98` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE c98;
+USE `c98`;
 
 -- --------------------------------------------------------
 
@@ -32,11 +33,13 @@ DROP TABLE IF EXISTS `fs`;
 CREATE TABLE IF NOT EXISTS `fs` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `path` varchar(1024) NOT NULL,
+  `size` int(11) NOT NULL,
   `owner` int(11) NOT NULL,
   `type` varchar(16) NOT NULL COMMENT 'Either "file" or "folder"',
   PRIMARY KEY (`id`),
+  UNIQUE KEY `path` (`path`) USING HASH,
   KEY `fs__owner` (`owner`)
-) ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -55,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `links` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
   KEY `links__owner` (`owner`)
-) ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -70,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `tokens` (
   `value` varchar(128) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `tokens__owner` (`owner`)
-) ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -86,7 +89,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `admin` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Constraints for dumped tables

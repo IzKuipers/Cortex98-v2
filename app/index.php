@@ -1,12 +1,22 @@
 <?php
 require_once("./lib/session.php");
 require_once("./lib/links.php");
+require_once("./lib/fs.php");
+require_once("./account/stats.php");
 require_once("./components/headerbar.php");
 require_once("./components/navigation.php");
 
+$start_time = date_create()->format('Uv');
+
 verify_loggedin();
+
 $session = get_user_from_session();
 $links = array_slice(get_all_links(), 0, 3);
+$root = $fs->readFolder();
+$stats = get_user_stats();
+
+$end_time = date_create()->format('Uv') - $start_time;
+
 ?>
 
 <!DOCTYPE html>
@@ -25,17 +35,17 @@ $links = array_slice(get_all_links(), 0, 3);
         <table border="0" cellpadding="2" cellspacing="2" width="700">
             <tr>
                 <td width="180" valign="top" bgcolor="#eeeeff">
-                    <form action="search" method="GET">
+                    <form action="http://frogfind.com" method="GET">
                         <table border="0" cellpadding="2" cellspacing="0" width="100%">
                             <tr bgcolor="#ccccff">
-                                <td nowrap align="left" colspan="2"><b>Search</b></td>
+                                <td nowrap align="left" colspan="2"><b>Frogfind</b></td>
                             </tr>
                             <tr>
-                                <td>
-                                    <input type="text" style="width: 100px" name="q">
+                                <td valign="middle" align="left">
+                                    <input type="text" style="width: 110px" name="q">
                                 </td>
-                                <td align="right">
-                                    <button type="submit">Go</button>
+                                <td valign="middle" align="right">
+                                    <button type="submit">Ribbit!</button>
                                 </td>
                             </tr>
                         </table>
@@ -46,27 +56,27 @@ $links = array_slice(get_all_links(), 0, 3);
                         </tr>
                         <tr>
                             <td>
-                                <a href="#">Links</a>
+                                <a href="links.php">Links</a>
                             </td>
-                            <td align="right"><img src="assets/bullet5.gif" alt=""></td>
+                            <td align="right"><img src="assets/symbols/bullet5.gif" alt=""></td>
                         </tr>
                         <tr>
                             <td>
-                                <a href="#">Files</a>
+                                <a href="files.php">Files</a>
                             </td>
-                            <td align="right"><img src="assets/bullet5.gif" alt=""></td>
+                            <td align="right"><img src="assets/symbols/bullet5.gif" alt=""></td>
                         </tr>
                         <tr>
                             <td>
-                                <a href="#">GitHub Explorer</a>
+                                <a href="github.php">GitHub Explorer</a>
                             </td>
-                            <td align="right"><img src="assets/bullet5.gif" alt=""></td>
+                            <td align="right"><img src="assets/symbols/bullet5.gif" alt=""></td>
                         </tr>
                         <tr>
                             <td>
-                                <a href="#">Release Downloader</a>
+                                <a href="downloader.php">Downloader</a>
                             </td>
-                            <td align="right"><img src="assets/bullet5.gif" alt=""></td>
+                            <td align="right"><img src="assets/symbols/bullet5.gif" alt=""></td>
                         </tr>
 
 
@@ -81,7 +91,8 @@ $links = array_slice(get_all_links(), 0, 3);
                     </table>
                 </td>
                 <td width="340" valign="top">
-                    <table border="0" cellpadding="2" cellspacing="0" width="100%" bgcolor="#ccffcc">
+                    <table border="0" cellpadding="2" cellspacing="0" width="100%" bgcolor="#ccffcc"
+                        class="welcome-table">
                         <tr bgcolor="#aaddaa">
                             <td align="left"><b>Cortex 98</b></td>
                             <td align="right">cortex98.nl</td>
@@ -99,6 +110,35 @@ $links = array_slice(get_all_links(), 0, 3);
                                 <img src="assets/c98badge.gif" alt="">
                                 <img src="assets/freeie.gif" alt="">
                                 <img src="assets/flagbadge.gif" alt="">
+                            </td>
+                        </tr>
+                    </table>
+                    <table border="0" cellpadding="2" cellspacing="0" width="100%" bgcolor="#ffccff">
+                        <tr bgcolor="#ddaadd">
+                            <td><b>Root folders</b></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>These are the top-level folders of Cortex 98:</p>
+                                <table border="0" cellspacing="2" cellpadding="2">
+                                    <?php foreach ($root["items"] as $index => $item): ?>
+                                        <?php if ($item["type"] === "folder"): ?>
+                                            <tr>
+                                                <td>
+                                                    <img src="assets/symbols/folder.gif" alt="">
+                                                </td>
+                                                <td>
+                                                    <a href="files.php?path=<?= $item["name"] ?>"><?= $item["name"] ?></a>
+                                                </td>
+                                            </tr>
+                                        <?php endif ?>
+                                    <?php endforeach; ?>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="right">
+                                <a href="files.php">View all files ></a>
                             </td>
                         </tr>
                     </table>
@@ -121,7 +161,7 @@ $links = array_slice(get_all_links(), 0, 3);
                                                 <b>
                                                     <a href="clicklink.php?linkid=<?= $link["id"] ?>"><?= $link["name"] ?></a>
                                                 </b>
-                                                <img src="assets/boom.gif" alt="" style="vertical-align: middle">
+                                                <img src="assets/symbols/boom.gif" alt="" style="vertical-align: middle">
                                             </li>
                                         <?php else: ?>
                                             <li>
@@ -140,17 +180,43 @@ $links = array_slice(get_all_links(), 0, 3);
                         </tr>
                     </table>
                     <table border="0" cellpadding="2" cellspacing="0" width="100%">
+                        <tr bgcolor="#ffff92" nowrap>
+                            <td>
+                                <b>Statistics</b>
+                            </td>
+                        </tr>
                         <tr>
                             <td>
-
+                                You're the owner of:
                             </td>
+                        </tr>
+                        <tr>
+
+                            <td>
+                                <ul>
+                                    <li><img src="assets/symbols/mouse.gif" alt="">
+                                        <b><?= $stats["stats"]["links"] ?></b> links
+                                    </li>
+                                    <li><img src="assets/symbols/file.gif" alt="">
+                                        <b><?= $stats["stats"]["files"] ?></b> files
+                                    </li>
+                                    <li><img src="assets/symbols/folder.gif" alt="">
+                                        <b><?= $stats["stats"]["folders"] ?></b> folders
+                                    </li>
+                                    <li><img src="assets/symbols/keyboard.gif" alt=""> <b>-</b> posts</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>This page's data was retrieved in <b><?= $end_time ?>ms</b></td>
                         </tr>
                     </table>
                 </td>
             </tr>
         </table>
         <p style="color: gray;">
-            The administrators of this web site reserve the right to remove inappropriate or illegal content. <a href="legal.php">Legal</a>
+            The administrators of this web site reserve the right to remove inappropriate or illegal content. <a
+                href="legal.php">Legal</a>
         </p>
     </center>
 </body>

@@ -1,9 +1,14 @@
 <?php
 
 require_once("db.php");
+require_once(__DIR__ . "/../../config.php");
 
 function create_user(string $username, string $password): CreateUserResult
 {
+    if (C98_DISABLE_REGISTRATION) {
+        return CreateUserResult::RegistrationDisabled;
+    }
+
     $username = strtolower($username);
     $existing = get_user_by_name($username);
 
@@ -35,12 +40,14 @@ enum CreateUserResult: int
     case UserExists = 1;
     case Success = 2;
     case DbError = 3;
+    case RegistrationDisabled = 4;
 }
 
 $CreateUserResultCaptions = [
     1 => "A user with that name already exists",
     2 => "The user has been created successfully",
     3 => "A database error occurred. Please try again later",
+    4 => "Registration is turned off right now! Please try again later"
 ];
 
 function get_user_by_name(string $username)

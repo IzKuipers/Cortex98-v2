@@ -144,7 +144,7 @@ function delete_link_as_session(int $link_id): true|string
 
         if (!$session || !$existing)
             throw new Exception("The link doesn't exist or you're not logged in.");
-        if ($session["username"] != $existing["username"])
+        if ($session["username"] != $existing["username"] && !$session["admin"])
             throw new Exception("You are not the owner of this link.");
 
         return delete_link($link_id);

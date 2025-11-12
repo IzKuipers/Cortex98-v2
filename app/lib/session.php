@@ -8,9 +8,21 @@ function verify_loggedin()
 {
     start_session_if_needed();
 
-    if (!isset($_SESSION["token"])) {
+    try {
+        if (!isset($_SESSION["token"]))
+            throw new Exception();
+
+        $user = get_user_from_token($_SESSION["token"]);
+
+        if (!$user)
+            throw new Exception();
+
+        if (C98_LOCKDOWN && !$user["admin"])
+            throw new Exception();
+    } catch (Exception $e) {
         header("location: " . WEB_ROOT . "/login.php");
     }
+
 }
 
 function get_user_from_token(string $token): ?array
@@ -98,14 +110,18 @@ function login(string $username, string $password)
         if (!$conn)
             throw new Exception("Database connection failed");
 
-        $statement = $conn->prepare("SELECT id,password FROM users WHERE username = ?");
+        $statement = $conn->prepare("SELECT id,password,admin FROM users WHERE username = ?");
         $statement->bind_param("s", $username);
 
         if (!$statement->execute())
             return null;
 
-        $statement->bind_result($user_id, $hash);
+        $statement->bind_result($user_id, $hash, $is_admin);
         $statement->fetch();
+
+        if (C98_LOCKDOWN && !$is_admin) {
+            throw new Exception("Cortex 98 is locked down! Only administrators can log in at this time.");
+        }
 
         if (!$user_id)
             throw new Exception("No user with username " . $username);
@@ -119,9 +135,17 @@ function login(string $username, string $password)
 
         $_SESSION["token"] = $token;
 
-        return $token;
+        return [
+            "success" => true,
+            "message" => "Welcome back!",
+            "token" => $token
+        ];
     } catch (Exception $e) {
-        return null;
+        return [
+            "success" => false,
+            "message" => $e->getMessage(),
+            "token" => null
+        ];
     } finally {
         disconnect_db($conn, $statement);
     }

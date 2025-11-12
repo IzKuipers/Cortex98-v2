@@ -9,7 +9,7 @@ function NavigationBar()
             <td align="right">
                 <a href="index.php">Home</a> -
                 <a href="links.php">Links</a> -
-                <a href="fs.php">Files</a> -
+                <a href="files.php">Files</a> -
                 <a href="github.php">GitHub Explorer</a> -
                 <a href="downloader.php">Downloader</a>
             </td>

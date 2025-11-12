@@ -1,10 +1,10 @@
-body.login-page form {
+body.singleton-dialog form {
   padding: 10px;
   background: #ffffcc;
   width: 300px;
   border: #ffffaa 1px outset;
 }
 
-body.login-page form input {
+body.singleton-dialog form input {
     width: 130px;
 }

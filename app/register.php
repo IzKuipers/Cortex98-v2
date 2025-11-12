@@ -1,8 +1,13 @@
 <?php
 
+require_once(__DIR__ . "/../config.php");
 require_once("components/headerbar.php");
 require_once("lib/user.php");
 require_once("lib/error.php");
+
+if (C98_DISABLE_REGISTRATION) {
+    error_message("Registration disabled", "Sorry! Registration is currently disabled. This might be because of maintenance or a server problem somewhere. Please try again later.");
+}
 
 if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST["username"], $_POST["password"], $_POST["confirm"])) {
     $username = $_POST["username"];
@@ -33,11 +38,11 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST["username"], $_POST["p
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/singleton.css">
     <title>Log in to Cortex 98</title>
 </head>
 
-<body class="login-page">
+<body class="singleton-dialog">
     <center>
         <?= HeaderBar() ?>
         <p>Create an account to continue to Cortex 98. If you already have an account, click <b>Log in</b>.</p>
@@ -67,6 +72,8 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST["username"], $_POST["p
                 </tr>
             </table>
         </form>
+        <p style="color: gray;">A screen with a resolution of 800x600 and 256 colors is recommended.<br>This site is
+            designed to work on Internet Explorer 5.<br><br>© 1999 IzKuipers. All Rights Reserved.</p>
     </center>
 </body>
 
