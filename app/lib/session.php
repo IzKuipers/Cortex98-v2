@@ -20,7 +20,8 @@ function verify_loggedin()
         if (C98_LOCKDOWN && !$user["admin"])
             throw new Exception();
     } catch (Exception $e) {
-        header("location: " . WEB_ROOT . "/login.php");
+        echo $e->getMessage();
+        // header("location: " . WEB_ROOT . "/login.php");
     }
 
 }
