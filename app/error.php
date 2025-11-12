@@ -7,8 +7,7 @@ require_once("lib/error.php");
 start_session_if_needed();
 
 if (!isset($_SESSION["error_title"], $_SESSION["error_message"], $_SESSION["error_return"]))
-    die;
-    // header("location: index.php");
+    header("location: index.php");
 
 $title = $_SESSION["error_title"];
 $message = $_SESSION["error_message"];

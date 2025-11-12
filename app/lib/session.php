@@ -20,8 +20,7 @@ function verify_loggedin()
         if (C98_LOCKDOWN && !$user["admin"])
             throw new Exception();
     } catch (Exception $e) {
-        echo $e->getMessage();
-        // header("location: " . WEB_ROOT . "/login.php");
+        header("location: " . WEB_ROOT . "/login.php");
     }
 
 }
@@ -167,13 +166,7 @@ function logout()
 
 function start_session_if_needed()
 {
-    try {
-        session_set_cookie_params(SESSION_LIFETIME, SESSION_PATH, SESSION_DOMAIN, SESSION_SECURE, SESSION_HTTPONLY);
-    } catch (Exception $e) {
-        // fail quietly
-    }
-
-    // if (session_status() === PHP_SESSION_NONE) {
+    if (session_status() === PHP_SESSION_NONE) {
         session_start();
-    // }
+    }
 }
