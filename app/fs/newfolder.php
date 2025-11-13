@@ -18,7 +18,7 @@ $path = $_GET["path"];
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["foldername"])) {
     $folder_name = trim($_POST["foldername"]);
-    if (!preg_match("/^[a-zA-Z0-9 ]+$/", $folder_name)) {
+    if (!preg_match("/^[a-zA-Z0-9 \-]+$/", $folder_name)) {
         error_message("Failed to create folder", "The folder name you specified contains characters we don't allow. Only alphanumeric characters or spaces are allowed.", $_SERVER['REQUEST_URI'], "Understood");
         die;
     }
