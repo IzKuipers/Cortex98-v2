@@ -55,83 +55,89 @@ function generatePath(string $crumb, string $I)
                         </tr>
                         <tr>
                             <td>
-                                <table border="0" cellspacing="2" cellpadding="2" width="100%">
-                                    <colgroup>
-                                        <col>
-                                        <col>
-                                        <col>
-                                        <col>
-                                        <col align="right">
-                                    </colgroup>
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Author</th>
-                                            <th>Size</th>
-                                            <th>Kind</th>
-                                            <th align="right"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($contents["items"] as $index => $item): ?>
-                                            <?php if ($item["type"] === "folder"): ?>
-                                                <tr>
-                                                    <td nowrap><img src="assets/symbols/folder.gif" alt="">
-                                                        <a
-                                                            href="files.php?path=<?= $path . ($path ? "/" : "") . $item["relative_path"] ?>"><?= $item["name"] ?></a>
-                                                    </td>
-                                                    <td nowrap><?= $item["username"] ?></td>
-                                                    <td>-</td>
-                                                    <td>Folder</td>
-                                                    <td align="right">
-                                                        <?php if ($session["id"] === $item["owner"] || $session["admin"]): ?>
-                                                            <a href="fs/deletefile.php?id=<?= $item["id"] ?>&continue=<?= WEB_ROOT ?>/files.php?path=<?= $path ?>"
-                                                                style="text-decoration: none;">
-                                                                <img src="assets/symbols/trash.gif" alt="" border="0"
-                                                                    title="Delete folder...">
-                                                            </a>
-                                                        <?php else: ?>
-                                                            <a style="text-decoration: none;">
-                                                                <img src="assets/symbols/trash-disabled.gif" alt="" border="0"
-                                                                    title="The owner can delete this folder">
-                                                            </a>
-                                                        <?php endif; ?>
-                                                    </td>
-                                                </tr>
-                                            <?php else: ?>
-                                                <tr>
+                                <?php if (count($contents["items"]) > 0): ?>
+                                    <table border="0" cellspacing="2" cellpadding="2" width="100%">
+                                        <colgroup>
+                                            <col>
+                                            <col>
+                                            <col>
+                                            <col>
+                                            <col align="right">
+                                        </colgroup>
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Author</th>
+                                                <th>Size</th>
+                                                <th>Kind</th>
+                                                <th align="right"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($contents["items"] as $index => $item): ?>
+                                                <?php if ($item["type"] === "folder"): ?>
+                                                    <tr>
+                                                        <td nowrap><img src="assets/symbols/folder.gif" alt="">
+                                                            <a
+                                                                href="files.php?path=<?= $path . ($path ? "/" : "") . $item["relative_path"] ?>"><?= $item["name"] ?></a>
+                                                        </td>
+                                                        <td nowrap><?= $item["username"] ?></td>
+                                                        <td>-</td>
+                                                        <td>Folder</td>
+                                                        <td align="right">
+                                                            <?php if ($session["id"] === $item["owner"] || $session["admin"]): ?>
+                                                                <a href="fs/deletefile.php?id=<?= $item["id"] ?>&continue=<?= WEB_ROOT ?>/files.php?path=<?= $path ?>"
+                                                                    style="text-decoration: none;">
+                                                                    <img src="assets/symbols/trash.gif" alt="" border="0"
+                                                                        title="Delete folder...">
+                                                                </a>
+                                                            <?php else: ?>
+                                                                <a style="text-decoration: none;">
+                                                                    <img src="assets/symbols/trash-disabled.gif" alt="" border="0"
+                                                                        title="The owner can delete this folder">
+                                                                </a>
+                                                            <?php endif; ?>
+                                                        </td>
+                                                    </tr>
+                                                <?php else: ?>
+                                                    <tr>
 
-                                                    <td nowrap><img src="assets/symbols/file.gif" alt="">
-                                                        <a href="fs/getfile.php?id=<?= $item["id"] ?>"><?= $item["name"] ?></a>
-                                                    </td>
-                                                    <td nowrap><?= $item["username"] ?></td>
-                                                    <td><?= formatBytes($item["size"]) ?></td>
-                                                    <td>File</td>
-                                                    <td align="right">
-                                                        <a href="fs/getfile.php?id=<?= $item["id"] ?>"
-                                                            style="text-decoration: none;">
-                                                            <img src="assets/symbols/floppydrive.gif" alt="" border="0"
-                                                                title="Download">
-                                                        </a>
-
-                                                        <?php if ($session["id"] === $item["owner"] || $session["admin"]): ?>
-                                                            <a href="fs/deletefile.php?id=<?= $item["id"] ?>&continue=<?= WEB_ROOT ?>/files.php?path=<?= $path ?>"
+                                                        <td nowrap><img src="assets/symbols/file.gif" alt="">
+                                                            <a href="fs/getfile.php?id=<?= $item["id"] ?>"><?= $item["name"] ?></a>
+                                                        </td>
+                                                        <td nowrap><?= $item["username"] ?></td>
+                                                        <td><?= formatBytes($item["size"]) ?></td>
+                                                        <td>File</td>
+                                                        <td align="right">
+                                                            <a href="fs/getfile.php?id=<?= $item["id"] ?>"
                                                                 style="text-decoration: none;">
-                                                                <img src="assets/symbols/trash.gif" alt="" border="0"
-                                                                    title="Delete file...">
+                                                                <img src="assets/symbols/floppydrive.gif" alt="" border="0"
+                                                                    title="Download">
                                                             </a>
-                                                        <?php else: ?>
-                                                            <a style="text-decoration: none;">
-                                                                <img src="assets/symbols/trash-disabled.gif" alt="" border="0"
-                                                                    title="The owner can delete this file">
-                                                            </a>
-                                                        <?php endif; ?>
-                                                    </td>
-                                                </tr>
-                                            <?php endif; ?>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
+
+                                                            <?php if ($session["id"] === $item["owner"] || $session["admin"]): ?>
+                                                                <a href="fs/deletefile.php?id=<?= $item["id"] ?>&continue=<?= WEB_ROOT ?>/files.php?path=<?= $path ?>"
+                                                                    style="text-decoration: none;">
+                                                                    <img src="assets/symbols/trash.gif" alt="" border="0"
+                                                                        title="Delete file...">
+                                                                </a>
+                                                            <?php else: ?>
+                                                                <a style="text-decoration: none;">
+                                                                    <img src="assets/symbols/trash-disabled.gif" alt="" border="0"
+                                                                        title="The owner can delete this file">
+                                                                </a>
+                                                            <?php endif; ?>
+                                                        </td>
+                                                    </tr>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                <?php else: ?>
+                                    <center>
+                                        <i>This folder is empty</i>
+                                    </center>
+                                <?php endif; ?>
                             </td>
                         </tr>
                     </table>
