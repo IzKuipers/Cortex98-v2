@@ -58,7 +58,7 @@ $links = get_all_links();
                                         <?php endif; ?>
                                         <p class="stats">
                                             <span class="clicks"><?= $link["visits"] ?> clicks</span> - Added by <?= $link['username'] === $session["username"] ? "you!" : $link["username"] ?>
-                                            <?php if($link["username"] == $session["username"] && !$session["admin"]): ?>
+                                            <?php if($link["username"] == $session["username"] || $session["admin"]): ?>
                                                 - <a href="deletelink.php?linkid=<?=$link['id']?>">Delete</a>
                                             <?php endif; ?>
                                         </p>
