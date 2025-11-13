@@ -12,10 +12,10 @@ const SESSION_DOMAIN = null;
 const SESSION_SECURE = 1;
 const SESSION_HTTPONLY = 1;
 
-const C98_DISABLE_REGISTRATION = false;
-const C98_LOCKDOWN = false
+const C98_LOCKDOWN = false;
+const C98_DISABLE_REGISTRATION = false
     // Leave the below OR expression in place. Removing it may have unforseen consequences. Thank you.
 
-    || C98_DISABLE_REGISTRATION;
+    || C98_LOCKDOWN;
 
 const WEB_ROOT = "/app"; // The root of Cortex 98. Empty string means root (so e.g. /index.php)
