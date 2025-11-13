@@ -1,7 +1,7 @@
 <?php
 
 require_once(__DIR__ . "/../../config.php");
-require_once("error.php");
+require_once(__DIR__ . "/error.php");
 
 function connect_db($throwError = true): ?mysqli
 {

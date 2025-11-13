@@ -1,7 +1,7 @@
 <?php
 
-require_once("components/headerbar.php");
-require_once("components/navigation.php");
+require_once(__DIR__ . "/components/headerbar.php");
+require_once(__DIR__ . "/components/navigation.php");
 
 ?>
 

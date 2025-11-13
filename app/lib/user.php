@@ -1,6 +1,6 @@
 <?php
 
-require_once("db.php");
+require_once(__DIR__ . "/db.php");
 require_once(__DIR__ . "/../../config.php");
 
 function create_user(string $username, string $password): CreateUserResult

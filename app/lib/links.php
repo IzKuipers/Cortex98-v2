@@ -1,7 +1,7 @@
 <?php
 
-require_once("db.php");
-require_once("session.php");
+require_once(__DIR__ . "/db.php");
+require_once(__DIR__ . "/session.php");
 
 function get_all_links()
 {

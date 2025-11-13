@@ -1,9 +1,9 @@
 <?php
 
 require_once(__DIR__ . "/../config.php");
-require_once("./components/headerbar.php");
-require_once("lib/session.php");
-require_once("lib/error.php");
+require_once(__DIR__ . "/components/headerbar.php");
+require_once(__DIR__ . "/lib/session.php");
+require_once(__DIR__ . "/lib/error.php");
 
 if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST["username"], $_POST["password"])) {
     $username = $_POST["username"];

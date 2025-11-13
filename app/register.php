@@ -1,9 +1,9 @@
 <?php
 
 require_once(__DIR__ . "/../config.php");
-require_once("components/headerbar.php");
-require_once("lib/user.php");
-require_once("lib/error.php");
+require_once(__DIR__ . "/components/headerbar.php");
+require_once(__DIR__ . "/lib/user.php");
+require_once(__DIR__ . "/lib/error.php");
 
 if (C98_DISABLE_REGISTRATION) {
     error_message("Registration disabled", "Sorry! Registration is currently disabled. This might be because of maintenance or a server problem somewhere. Please try again later.");

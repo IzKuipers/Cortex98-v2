@@ -1,6 +1,6 @@
 <?php
 
-require_once("error.php");
+require_once(__DIR__ . "/error.php");
 
 function wip(string $what = "This feature")
 {

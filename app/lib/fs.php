@@ -1,7 +1,7 @@
 <?php
 
 require_once(__DIR__ . "/../../config.php");
-require_once("db.php");
+require_once(__DIR__ . "/db.php");
 
 const FS_BASE_PATH = __DIR__ . "/../../fs";
 

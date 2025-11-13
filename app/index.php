@@ -1,10 +1,10 @@
 <?php
-require_once("./lib/session.php");
-require_once("./lib/links.php");
-require_once("./lib/fs.php");
-require_once("./account/stats.php");
-require_once("./components/headerbar.php");
-require_once("./components/navigation.php");
+require_once(__DIR__ . "/lib/session.php");
+require_once(__DIR__ . "/lib/links.php");
+require_once(__DIR__ . "/lib/fs.php");
+require_once(__DIR__ . "/account/stats.php");
+require_once(__DIR__ . "/components/headerbar.php");
+require_once(__DIR__ . "/components/navigation.php");
 
 $start_time = date_create()->format('Uv');
 
