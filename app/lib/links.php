@@ -74,7 +74,7 @@ function get_link_by_id(int $link_id)
 function create_link(int $user_id, string $name, string $target, string $description = "")
 {
     if (!filter_var($target, FILTER_VALIDATE_URL)) {
-        return false;
+        throw new Exception("Specified URL does not appear to be valid");
     }
 
     try {
@@ -86,17 +86,23 @@ function create_link(int $user_id, string $name, string $target, string $descrip
         $conn = connect_db();
 
         if (!$conn)
-            return false;
+            throw new Exception("Failed to connect to database");
 
         $statement = $conn->prepare("INSERT INTO links (owner,name,target,description) VALUES (?,?,?,?)");
         $statement->bind_param("isss", $user_id, $name, $target, $description);
 
         if (!$statement->execute())
-            return false;
+            throw new Exception("Failed to execute statement");
 
-        return true;
+        return [
+            "success" => true,
+            "message" => "Link added successfully"
+        ];
     } catch (Exception $e) {
-        return false;
+        return [
+            "success" => false,
+            "message" => $e->getMessage()
+        ];
     } finally {
         disconnect_db($conn, $statement);
     }
@@ -104,12 +110,20 @@ function create_link(int $user_id, string $name, string $target, string $descrip
 
 function create_link_as_session(string $name, string $target, string $description = "")
 {
-    $session = get_user_from_session();
+    try {
+        $session = get_user_from_session();
 
-    if (!$session)
-        return false;
+        if (!$session)
+            throw new Exception("You're not logged in!");
 
-    return create_link($session["id"], $name, $target, $description);
+        return create_link($session["id"], $name, $target, $description);
+    } catch (Exception $e) {
+        return [
+            "success" => false,
+            "message" => $e->getMessage()
+        ];
+    }
+
 }
 
 function delete_link(int $link_id): true|string

@@ -11,8 +11,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["name"], $_POST["url"]
 
     $result = create_link_as_session(htmlspecialchars($_POST["name"]), htmlspecialchars($_POST["url"]), htmlspecialchars($description));
 
-    if (!$result) {
-        error_message("Couldn't add link", "There might already be a link with that name, or the link is invalid. Please try something else.", "links.php");
+    if (!$result["success"]) {
+        error_message("Couldn't add link", "An error occurred while trying to add the link you specified. " . $result["message"], "links.php");
     }
 }
 
