@@ -5,10 +5,11 @@ require_once(__DIR__ . "/session.php");
 
 function get_all_links()
 {
-    $conn = connect_db();
-
-    if (!$conn)
+    try {
+        $conn = connect_db();
+    } catch (Exception $e) {
         return [];
+    }
 
     $statement = $conn->prepare("SELECT links.id, links.name, links.target, links.visits, links.description, users.username FROM links INNER JOIN users ON users.id = links.owner ORDER BY links.visits DESC");
 
@@ -39,10 +40,11 @@ function get_link_by_id(int $link_id)
     try {
         global $conn, $statement;
 
-        $conn = connect_db();
-
-        if (!$conn)
+        try {
+            $conn = connect_db();
+        } catch (Exception $e) {
             return null;
+        }
 
         $statement = $conn->prepare("SELECT links.id, links.name, links.target, links.visits, links.description, users.username FROM links INNER JOIN users ON users.id = links.owner WHERE links.id = ?");
         $statement->bind_param("i", $link_id);
@@ -84,9 +86,6 @@ function create_link(int $user_id, string $name, string $target, string $descrip
             $description = "";
 
         $conn = connect_db();
-
-        if (!$conn)
-            throw new Exception("Failed to connect to database");
 
         $statement = $conn->prepare("INSERT INTO links (owner,name,target,description) VALUES (?,?,?,?)");
         $statement->bind_param("isss", $user_id, $name, $target, $description);
@@ -132,9 +131,6 @@ function delete_link(int $link_id): true|string
         global $conn, $statement;
         $conn = connect_db();
 
-        if (!$conn)
-            throw new Exception("Could not connect to the database.");
-
         $statement = $conn->prepare("DELETE FROM links WHERE id = ?");
         $statement->bind_param("i", $link_id);
 
@@ -175,10 +171,12 @@ function click_link(int $link_id)
         return;
 
     $clicks = $link["visits"] + 1;
-    $conn = connect_db();
 
-    if (!$conn)
+    try {
+        $conn = connect_db();
+    } catch (Exception $e) {
         return;
+    }
 
     $statement = $conn->prepare("UPDATE links SET visits = ? WHERE id = ?");
     $statement->bind_param("ii", $clicks, $link_id);

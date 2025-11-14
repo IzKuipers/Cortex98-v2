@@ -16,13 +16,6 @@ function get_user_stats()
 
     $conn = connect_db();
 
-    if (!$conn)
-        return [
-            "success" => false,
-            "message" => "Failed to connect to database",
-            "stats" => []
-        ];
-
     try {
 
         $links_statement = $conn->prepare("SELECT COUNT(*) FROM links WHERE owner = ?");

@@ -3,7 +3,7 @@
 require_once(__DIR__ . "/../../config.php");
 require_once(__DIR__ . "/error.php");
 
-function connect_db($throwError = true): ?mysqli
+function connect_db($offline_redirect = true): ?mysqli
 {
     try {
         $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
@@ -14,9 +14,10 @@ function connect_db($throwError = true): ?mysqli
 
         return $conn;
     } catch (Exception $e) {
-        if ($throwError) we_are_offline();
+        if ($offline_redirect)
+            we_are_offline();
 
-        return null;
+        throw new Exception("Failed to connect to database");
     }
 }
 
@@ -43,12 +44,13 @@ function disconnect_db($conn, ...$statements)
 
 function is_db_online(): bool
 {
-    $conn = connect_db();
+    try {
+        $conn = connect_db();
 
-    if (!$conn)
+        disconnect_db($conn);
+
+        return true;
+    } catch (Exception $e) {
         return false;
-
-    disconnect_db($conn);
-
-    return true;
+    }
 }

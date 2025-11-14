@@ -12,7 +12,8 @@ function create_user(string $username, string $password): CreateUserResult
     $username = strtolower($username);
     $existing = get_user_by_name($username);
 
-    if ($existing) return CreateUserResult::UserExists;
+    if ($existing)
+        return CreateUserResult::UserExists;
 
     $hash = password_hash($password, PASSWORD_DEFAULT);
 
@@ -21,10 +22,8 @@ function create_user(string $username, string $password): CreateUserResult
 
         $conn = connect_db();
 
-        if (!$conn) return CreateUserResult::DbError;
-
         $statement = $conn->prepare("INSERT INTO users (username,password) VALUES (?,?)");
-        $statement->bind_param("ss",$username, $hash);
+        $statement->bind_param("ss", $username, $hash);
         $statement->execute();
 
         return CreateUserResult::Success;
@@ -53,10 +52,12 @@ $CreateUserResultCaptions = [
 function get_user_by_name(string $username)
 {
     $username = strtolower($username);
-    $conn = connect_db();
 
-    if (!$conn)
+    try {
+        $conn = connect_db();
+    } catch (Exception $e) {
         return null;
+    }
 
     try {
         $statement = $conn->prepare("SELECT id,password,admin FROM users WHERE username = ?");
@@ -81,12 +82,15 @@ function get_user_by_name(string $username)
     }
 }
 
-function delete_user_by_name(string $username) {
+function delete_user_by_name(string $username)
+{
     $username = strtolower($username);
-    $conn = connect_db();
-
-    if (!$conn)
+    
+    try {
+        $conn = connect_db();
+    } catch (Exception $e) {
         return;
+    }
 
     try {
         $statement = $conn->prepare("DELETE FROM users WHERE username = ?");

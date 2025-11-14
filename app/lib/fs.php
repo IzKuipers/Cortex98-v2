@@ -32,8 +32,9 @@ class FileSystemManager
 
     public function createFolder(int $owner_id, string $relative_path): array
     {
-        $conn = connect_db();
-        if (!$conn) {
+        try {
+            $conn = connect_db();
+        } catch (Exception $e) {
             return ['success' => false, 'message' => 'Database connection failed', 'id' => null, 'path' => null];
         }
 
@@ -101,8 +102,9 @@ class FileSystemManager
             return ['success' => false, 'message' => "File doesn't fit on the filesystem; there's too much stuff!", 'id' => null, 'path' => null];
         }
 
-        $conn = connect_db();
-        if (!$conn) {
+        try {
+            $conn = connect_db();
+        } catch (Exception $e) {
             return ['success' => false, 'message' => 'Database connection failed', 'id' => null, 'path' => null];
         }
 
@@ -188,8 +190,9 @@ class FileSystemManager
             return ['success' => false, 'message' => "File doesn't fit on the filesystem; there's too much stuff!", 'id' => null, 'path' => null];
         }
 
-        $conn = connect_db();
-        if (!$conn) {
+        try {
+            $conn = connect_db();
+        } catch (Exception $e) {
             return ['success' => false, 'message' => 'Database connection failed', 'id' => null, 'path' => null];
         }
 
@@ -318,8 +321,9 @@ class FileSystemManager
 
     public function downloadFile(int $fs_id, ?int $owner_id = null): void
     {
-        $conn = connect_db();
-        if (!$conn) {
+        try {
+            $conn = connect_db();
+        } catch (Exception $e) {
             http_response_code(500);
             exit('Database connection failed');
         }
@@ -384,8 +388,9 @@ class FileSystemManager
 
     public function getFileInfo(int $fs_id, ?int $owner_id = null): ?array
     {
-        $conn = connect_db();
-        if (!$conn) {
+        try {
+            $conn = connect_db();
+        } catch (Exception $e) {
             error_log("Database connection failed in getFileInfo");
             return null;
         }
@@ -451,8 +456,9 @@ class FileSystemManager
             return ['success' => false, 'message' => 'Security violation: folder path is outside base directory', 'items' => []];
         }
 
-        $conn = connect_db();
-        if (!$conn) {
+        try {
+            $conn = connect_db();
+        } catch (Exception $e) {
             return ['success' => false, 'message' => 'Database connection failed', 'items' => []];
         }
 
@@ -532,8 +538,9 @@ class FileSystemManager
 
     public function listByOwner(int $owner_id, ?string $type = null): array
     {
-        $conn = connect_db();
-        if (!$conn) {
+        try {
+            $conn = connect_db();
+        } catch (Exception $e) {
             return ['success' => false, 'message' => 'Database connection failed', 'items' => []];
         }
 
@@ -588,8 +595,9 @@ class FileSystemManager
 
     public function delete(int $fs_id, ?int $owner_id = null): array
     {
-        $conn = connect_db();
-        if (!$conn) {
+        try {
+            $conn = connect_db();
+        } catch (Exception $e) {
             return ['success' => false, 'message' => 'Database connection failed'];
         }
 
@@ -688,8 +696,9 @@ class FileSystemManager
 
     public function deleteFolderRecursive(int $fs_id, ?int $owner_id = null): array
     {
-        $conn = connect_db();
-        if (!$conn) {
+        try {
+            $conn = connect_db();
+        } catch (Exception $e) {
             return ['success' => false, 'message' => 'Database connection failed'];
         }
 
@@ -809,9 +818,6 @@ class FileSystemManager
     {
         try {
             $conn = connect_db();
-
-            if (!$conn)
-                return -1;
 
             $statement = $conn->prepare("SELECT SUM(size) FROM fs");
             $statement->execute();

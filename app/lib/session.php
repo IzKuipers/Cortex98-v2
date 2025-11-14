@@ -27,10 +27,11 @@ function verify_loggedin()
 
 function get_user_from_token(string $token): ?array
 {
-    $conn = connect_db();
-
-    if (!$conn)
+    try {
+        $conn = connect_db();
+    } catch (Exception $e) {
         return null;
+    }
 
     $statement = $conn->prepare("SELECT users.id,username,password,admin FROM tokens INNER JOIN users ON users.id = tokens.owner WHERE value = ?;");
     $statement->bind_param("s", $token);
@@ -65,10 +66,11 @@ function generate_token($userId): string
 {
     $uuid = guidv4();
 
-    $conn = connect_db();
-
-    if (!$conn)
+    try {
+        $conn = connect_db();
+    } catch (Exception $e) {
         return null;
+    }
 
     $statement = $conn->prepare("INSERT INTO tokens (owner,value) VALUES (?,?)");
     $statement->bind_param("is", $userId, $uuid);
@@ -81,10 +83,11 @@ function generate_token($userId): string
 
 function delete_token_by_value(string $value): void
 {
-    $conn = connect_db();
-
-    if (!$conn)
+    try {
+        $conn = connect_db();
+    } catch (Exception $e) {
         return;
+    }
 
     try {
         $statement = $conn->prepare("DELETE FROM tokens WHERE value = ?");
@@ -106,9 +109,6 @@ function login(string $username, string $password)
 
     try {
         $conn = connect_db();
-
-        if (!$conn)
-            throw new Exception("Database connection failed");
 
         $statement = $conn->prepare("SELECT id,password,admin FROM users WHERE username = ?");
         $statement->bind_param("s", $username);
