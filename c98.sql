@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 13, 2025 at 08:46 PM
+-- Generation Time: Nov 14, 2025 at 10:28 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -127,11 +127,11 @@ CREATE TABLE IF NOT EXISTS `topic` (
   `owner` int(11) NOT NULL,
   `title` varchar(256) NOT NULL,
   `created` datetime NOT NULL DEFAULT current_timestamp(),
-  `mainPost` int(11) NOT NULL,
+  `mainPost` int(11) DEFAULT NULL,
   `category` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `topic__owner` (`owner`),
-  KEY `topic__mainPost` (`mainPost`)
+  KEY `topic__mainPost` (`mainPost`),
+  KEY `topic__owner` (`owner`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -157,39 +157,39 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Constraints for table `fs`
 --
 ALTER TABLE `fs`
-  ADD CONSTRAINT `owner` FOREIGN KEY (`owner`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `owner` FOREIGN KEY (`owner`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `likes`
 --
 ALTER TABLE `likes`
-  ADD CONSTRAINT `likes__owner` FOREIGN KEY (`owner`) REFERENCES `users` (`id`),
-  ADD CONSTRAINT `likes__post` FOREIGN KEY (`post`) REFERENCES `posts` (`id`);
+  ADD CONSTRAINT `likes__owner` FOREIGN KEY (`owner`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `likes__post` FOREIGN KEY (`post`) REFERENCES `posts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `links`
 --
 ALTER TABLE `links`
-  ADD CONSTRAINT `links__owner` FOREIGN KEY (`owner`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `links__owner` FOREIGN KEY (`owner`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `posts`
 --
 ALTER TABLE `posts`
-  ADD CONSTRAINT `posts__owner` FOREIGN KEY (`owner`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `posts__owner` FOREIGN KEY (`owner`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `tokens`
 --
 ALTER TABLE `tokens`
-  ADD CONSTRAINT `tokens__owner` FOREIGN KEY (`owner`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `tokens__owner` FOREIGN KEY (`owner`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `topic`
 --
 ALTER TABLE `topic`
-  ADD CONSTRAINT `topic__mainPost` FOREIGN KEY (`mainPost`) REFERENCES `posts` (`id`),
-  ADD CONSTRAINT `topic__owner` FOREIGN KEY (`owner`) REFERENCES `users` (`id`);
+  ADD CONSTRAINT `topic__mainPost` FOREIGN KEY (`mainPost`) REFERENCES `posts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `topic__owner` FOREIGN KEY (`owner`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
