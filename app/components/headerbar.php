@@ -6,21 +6,19 @@ require_once(__DIR__ . "/../../config.php");
 function HeaderBar()
 {
     $session = get_user_from_session();
-
     $username = $session ? $session["username"] : "Stranger";
+    $web_root = WEB_ROOT;
 
     $links = $session ? <<<HTML
-     - <a href="account/logout.php">Log out</a>
-     - <a href="account/account.php">Account</a>
+     - <a href="$web_root/account/logout.php">Log out</a>
+     - <a href="$web_root/account/account.php">Account</a>
     HTML : "";
 
     $admin_tag = ($session && $session["admin"]) ? <<<HTML
-    <font color="#ffffff" style="background-color: #ff0000">&nbsp;<b>ADMIN</b>&nbsp;</font>
+    <a style="background-color: #ff0000; text-decoration: none; color: #ffffff;" href="$web_root/admin/index.php">&nbsp;<b>ADMIN</b>&nbsp;</a>
     HTML : "";
 
-    $web_root = WEB_ROOT;
-
-    $result= <<<HTML
+    $result = <<<HTML
     <table border="0" cellpadding="8" cellspacing="0" width="600" bgcolor="#ffffff">
         <tr>
             <td width="25%">

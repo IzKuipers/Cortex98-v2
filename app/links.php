@@ -38,33 +38,40 @@ $links = get_all_links();
         <table border="0" cellpadding="2" cellspacing="2" width="700">
             <tr>
                 <td width="450" valign="top">
-                    <table width="100%" border="0" cellpadding="2" cellspacing="2" width="100%" bgcolor="#ffffd2">
-                        <tr bgcolor="#ffff92">
+                    <table width="100%" border="0" cellpadding="2" cellspacing="2" width="100%" bgcolor="#94d4ff">
+                        <tr bgcolor="#0099ff" style="color: white">
                             <td><b>Handy Dandy Links</b></td>
                         </tr>
                         <tr>
                             <td style="padding: 10px;">
-                                <?php foreach ($links as $index =>$link): ?>
-                                    <div class="link">
-                                        <p class="name">
-                                            <?= $link["name"] ?>
-                                            <?php if ($index === 0): ?>
-                                                <img src="assets/symbols/boom.gif" alt="">
+                                <?php if (count($links["items"]) > 0): ?>
+                                    <?php foreach ($links["items"] as $index => $link): ?>
+                                        <div class="link">
+                                            <p class="name">
+                                                <?= $link["name"] ?>
+                                                <?php if ($index === 0): ?>
+                                                    <img src="assets/symbols/boom.gif" alt="">
+                                                <?php endif; ?>
+                                            </p>
+                                            <a href="clicklink.php?linkid=<?= $link["id"] ?>"><?= $link["target"] ?></a>
+                                            <?php if ($link["description"]): ?>
+                                                <p class="description"><?= $link["description"] ?></p>
                                             <?php endif; ?>
-                                        </p>
-                                        <a href="clicklink.php?linkid=<?= $link["id"] ?>"><?= $link["target"] ?></a>
-                                        <?php if ($link["description"]): ?>
-                                            <p class="description"><?= $link["description"] ?></p>
-                                        <?php endif; ?>
-                                        <p class="stats">
-                                            <span class="clicks"><?= $link["visits"] ?> clicks</span> - Added by <?= $link['username'] === $session["username"] ? "you!" : $link["username"] ?>
-                                            <?php if($link["username"] == $session["username"] || $session["admin"]): ?>
-                                                - <a href="deletelink.php?linkid=<?=$link['id']?>">Delete</a>
-                                            <?php endif; ?>
-                                        </p>
-                                        <hr>
-                                    </div>
-                                <?php endforeach; ?>
+                                            <p class="stats">
+                                                <span class="clicks"><?= $link["visits"] ?> clicks</span> - Added by
+                                                <?= $link['username'] === $session["username"] ? "you!" : $link["username"] ?>
+                                                <?php if ($link["username"] == $session["username"] || $session["admin"]): ?>
+                                                    - <a href="deletelink.php?linkid=<?= $link['id'] ?>">Delete</a>
+                                                <?php endif; ?>
+                                            </p>
+                                            <hr>
+                                        </div>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <center style="margin: 10px 0;">
+                                        <i>There are no links yet!</i>
+                                    </center>
+                                <?php endif ?>
                             </td>
                         </tr>
                     </table>

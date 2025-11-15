@@ -1,5 +1,6 @@
 <?php
 require_once(__DIR__ . "/../components/headerbar.php");
+require_once(__DIR__ . "/../components/navigation.php");
 require_once(__DIR__ . "/../lib/fs.php");
 require_once(__DIR__ . "/../lib/session.php");
 require_once(__DIR__ . "/../lib/error.php");
@@ -33,7 +34,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES["upload"])) {
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="../css/singleton.css">
     <title>Upload file to <?= $path ?></title>
@@ -42,6 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES["upload"])) {
 <body class="singleton-dialog">
     <center>
         <?= HeaderBar() ?>
+        <?= NavigationBar() ?>
         <p id="test">Please choose the file you wish to upload, then click <b>Upload</b>.</p>
         <form action="" method="POST" enctype="multipart/form-data"
             onsubmit="document.all.test.innerHTML = 'Your file is being uploaded to the server, please wait...';">

@@ -11,7 +11,7 @@ verify_loggedin();
 $path = $_GET["path"] ?? "";
 $session = get_user_from_session();
 $contents = $fs->readFolder($path);
-$fs_usage = $fs->get_fs_size();
+$fs_usage = $fs->get_fs_size() ?? 0;
 
 if (!$contents["success"]) {
     error_message("Failed to read folder", "The folder you tried to access could not be read. " . $contents["message"], "files.php");
@@ -32,7 +32,6 @@ function generatePath(string $crumb, string $I)
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/main.css">
     <title><?= !$path ? "Files" : $path ?> - Cortex 98</title>
 </head>
@@ -44,9 +43,9 @@ function generatePath(string $crumb, string $I)
         <table cellpadding="2" cellspacing="2" border="0" width="700">
             <tr>
                 <td valign="top" width="500">
-                    <table bgcolor="#ffffcc" width="100%" cellpadding="2" cellspacing="2" border="0">
+                    <table bgcolor="#9df372" width="100%" cellpadding="2" cellspacing="2" border="0">
                         <tr>
-                            <td align="left" bgcolor="#ddddaa">
+                            <td align="left" bgcolor="#e4ffd7">
                                 <a href="files.php">Files</a>
                                 <?php foreach ($split as $index => $crumb): ?>
                                     / <a href="files.php?path=<?= generatePath($crumb, $index) ?>"><?= $crumb ?></a>
@@ -174,15 +173,19 @@ function generatePath(string $crumb, string $I)
                         </tr>
                         <tr>
                             <td>
-                                <div class="progress-bar">
-                                    <div class="inner" style="width: <?= (100 / FS_MAX_SIZE) * $fs_usage ?>%"></div>
-                                </div>
-                                <ul>
-                                    <li>Used: <?= formatBytes($fs_usage) ?></li>
-                                    <li>Free: <?= formatBytes(FS_MAX_SIZE - $fs_usage) ?></li>
-                                    <li>Total: <?= formatBytes(FS_MAX_SIZE) ?></li>
-                                </ul>
-                                <!-- <progress max="<?= FS_MAX_SIZE ?>" value="<?= $fs_usage ?>"></progress> -->
+                                <?php if ($fs_usage > 0): ?>
+                                    <div class="progress-bar">
+                                        <div class="inner" style="width: <?= (100 / FS_MAX_SIZE) * $fs_usage ?>%"></div>
+                                    </div>
+                                    <ul>
+                                        <li>Used: <?= formatBytes($fs_usage) ?></li>
+                                        <li>Free: <?= formatBytes(FS_MAX_SIZE - $fs_usage) ?></li>
+                                        <li>Total: <?= formatBytes(FS_MAX_SIZE) ?></li>
+                                    </ul>
+                                    <!-- <progress max="<?= FS_MAX_SIZE ?>" value="<?= $fs_usage ?>"></progress> -->
+                                <?php else: ?>
+                                    <img src="assets/symbols/warning.gif" alt=""> Failed to get storage usage information. The filesystem might still be empty, or there's a problem with the database.
+                                <?php endif ?>
                             </td>
                         </tr>
                     </table>

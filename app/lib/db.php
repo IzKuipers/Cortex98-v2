@@ -3,7 +3,7 @@
 require_once(__DIR__ . "/../../config.php");
 require_once(__DIR__ . "/error.php");
 
-function connect_db($offline_redirect = true): ?mysqli
+function connect_db($offline_redirect = true): mysqli
 {
     try {
         $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);

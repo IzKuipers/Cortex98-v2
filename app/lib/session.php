@@ -4,7 +4,7 @@ require_once(__DIR__ . "/../../config.php");
 require_once(__DIR__ . "/db.php");
 require_once(__DIR__ . "/uuid.php");
 
-function verify_loggedin()
+function verify_loggedin(bool $require_admin = false)
 {
     start_session_if_needed();
 
@@ -17,7 +17,7 @@ function verify_loggedin()
         if (!$user)
             throw new Exception();
 
-        if (C98_LOCKDOWN && !$user["admin"])
+        if ((C98_LOCKDOWN || $require_admin) && !$user["admin"])
             throw new Exception();
     } catch (Exception $e) {
         header("location: " . WEB_ROOT . "/login.php");

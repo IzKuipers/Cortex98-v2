@@ -832,6 +832,42 @@ class FileSystemManager
         }
     }
 
+    public function get_all_entries()
+    {
+        try {
+            $conn = connect_db();
+            $statement = $conn->prepare("SELECT id,path,size,owner,type FROM fs");
+
+            if (!$statement->execute())
+                throw new Exception("Failed to execute statement");
+
+            $statement->bind_result($id, $path, $size, $owner, $type);
+            $result = [];
+
+            while ($statement->fetch()) {
+                $result[] = [
+                    "id" => $id,
+                    "path" => $path,
+                    "size" => $size,
+                    "owner" => $owner,
+                    "type" => $type,
+                ];
+            }
+
+            return [
+                "success" => true,
+                "message" => "Entries retrieved successfully",
+                "items" => $result
+            ];
+        } catch (Exception $e) {
+            return [
+                "success" => false,
+                "message" => $e->getMessage(),
+                "items" => []
+            ];
+        }
+    }
+
     public function new_file_is_within_boundary(int $new_file_size)
     {
         $fs_size = $this->get_fs_size();

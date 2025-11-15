@@ -1,5 +1,6 @@
 <?php
 
+require_once(__DIR__ . "/components/navigation.php");
 require_once(__DIR__ . "/components/headerbar.php");
 require_once(__DIR__ . "/lib/session.php");
 require_once(__DIR__ . "/lib/error.php");
@@ -39,6 +40,7 @@ $cancel_caption = $_SESSION["confirm_cancel_caption"];
 <body>
     <center>
         <?= HeaderBar() ?>
+        <?= NavigationBar() ?>
         <div class="error-wrapper">
             <div class="error-body">
                 <h1><?= $title ?></h1>

@@ -11,7 +11,7 @@ $start_time = date_create()->format('Uv');
 verify_loggedin();
 
 $session = get_user_from_session();
-$links = array_slice(get_all_links(), 0, 3);
+$links = array_slice(get_all_links()["items"], 0, 3);
 $root = $fs->readFolder();
 $stats = get_user_stats();
 
@@ -56,18 +56,6 @@ $end_time = date_create()->format('Uv') - $start_time;
                         </tr>
                         <tr>
                             <td>
-                                <a href="links.php">Links</a>
-                            </td>
-                            <td align="right"><img src="assets/symbols/bullet5.gif" alt=""></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <a href="files.php">Files</a>
-                            </td>
-                            <td align="right"><img src="assets/symbols/bullet5.gif" alt=""></td>
-                        </tr>
-                        <tr>
-                            <td>
                                 <a href="github.php">GitHub Explorer</a>
                             </td>
                             <td align="right"><img src="assets/symbols/bullet5.gif" alt=""></td>
@@ -91,9 +79,9 @@ $end_time = date_create()->format('Uv') - $start_time;
                     </table>
                 </td>
                 <td width="340" valign="top">
-                    <table border="0" cellpadding="2" cellspacing="0" width="100%" bgcolor="#ccffcc"
+                    <table border="0" cellpadding="2" cellspacing="0" width="100%" bgcolor="#ffb5a2"
                         class="welcome-table">
-                        <tr bgcolor="#aaddaa">
+                        <tr bgcolor="#ff8364">
                             <td align="left"><b>Cortex 98</b></td>
                             <td align="right">cortex98.nl</td>
                         </tr>

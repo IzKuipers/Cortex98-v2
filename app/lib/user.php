@@ -82,10 +82,47 @@ function get_user_by_name(string $username)
     }
 }
 
+function get_all_users()
+{
+    try {
+        $conn = connect_db();
+
+        $statement = $conn->prepare("SELECT id,username,admin FROM users");
+
+        if (!$statement->execute())
+            throw new Exception("Failed to execute statement");
+
+        $statement->bind_result($id, $username, $admin);
+        $result = [];
+
+        while ($statement->fetch()) {
+            $result[] = [
+                "id" => $id,
+                "username" => $username,
+                "admin" => $admin
+            ];
+        }
+
+        return [
+            "success" => true,
+            "message" => "Users retrieved successfully",
+            "users" => $result
+        ];
+    } catch (Exception $e) {
+        return [
+            "success" => false,
+            "message" => $e->getMessage(),
+            "users" => []
+        ];
+    } finally {
+        disconnect_db($conn, $statement);
+    }
+}
+
 function delete_user_by_name(string $username)
 {
     $username = strtolower($username);
-    
+
     try {
         $conn = connect_db();
     } catch (Exception $e) {

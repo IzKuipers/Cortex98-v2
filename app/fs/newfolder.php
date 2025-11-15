@@ -1,5 +1,6 @@
 <?php
 require_once(__DIR__ . "/../components/headerbar.php");
+require_once(__DIR__ . "/../components/navigation.php");
 require_once(__DIR__ . "/../lib/fs.php");
 require_once(__DIR__ . "/../lib/session.php");
 require_once(__DIR__ . "/../lib/error.php");
@@ -38,7 +39,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["foldername"])) {
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" href="../css/singleton.css">
     <title>New folder in <?= $path ?></title>
@@ -47,6 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["foldername"])) {
 <body class="singleton-dialog">
     <center>
         <?= HeaderBar() ?>
+        <?= NavigationBar() ?>
         <p>Please enter a name for the folder you wish to create, then click <b>Create</b>.</p>
         <form action="" method="POST">
             <table width="300">

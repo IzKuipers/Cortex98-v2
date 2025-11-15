@@ -7,32 +7,38 @@ function get_all_links()
 {
     try {
         $conn = connect_db();
+
+        $statement = $conn->prepare("SELECT links.id, links.name, links.target, links.visits, links.description, users.username FROM links INNER JOIN users ON users.id = links.owner ORDER BY links.visits DESC");
+
+        if (!($statement->execute()))
+            throw new Exception();
+
+        $statement->bind_result($link_id, $name, $target, $visits, $description, $username);
+        $result = [];
+
+        while ($statement->fetch()) {
+            $result[] = array(
+                "id" => $link_id,
+                "name" => $name,
+                "target" => $target,
+                "visits" => $visits,
+                "description" => $description,
+                "username" => $username,
+            );
+        }
+
+        return [
+            "success" => true,
+            "message" => "Links retrieved successfully",
+            "items" => $result
+        ];
     } catch (Exception $e) {
-        return [];
+        return [
+            "success" => false,
+            "message" => $e->getMessage(),
+            "items" => []
+        ];
     }
-
-    $statement = $conn->prepare("SELECT links.id, links.name, links.target, links.visits, links.description, users.username FROM links INNER JOIN users ON users.id = links.owner ORDER BY links.visits DESC");
-
-    if (!($statement->execute()))
-        throw new Exception();
-
-    $statement->bind_result($link_id, $name, $target, $visits, $description, $username);
-    $result = [];
-
-    while ($statement->fetch()) {
-        $result[] = array(
-            "id" => $link_id,
-            "name" => $name,
-            "target" => $target,
-            "visits" => $visits,
-            "description" => $description,
-            "username" => $username,
-        );
-    }
-
-    disconnect_db($conn, $statement);
-
-    return $result;
 }
 
 function get_link_by_id(int $link_id)
