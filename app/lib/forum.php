@@ -34,7 +34,7 @@ function create_topic(int $category_id, int $user_id, string $title, string $con
     try {
         $conn = connect_db();
 
-        $topic_statement = $conn->prepare("INSERT INTO topic (owner, title, category) VALUES (?, ?)");
+        $topic_statement = $conn->prepare("INSERT INTO topic (owner, title, category) VALUES (?,?,?)");
         $topic_statement->bind_param("isi", $user_id, $title, $category_id);
 
         if (!$topic_statement->execute())
@@ -63,7 +63,7 @@ function create_topic(int $category_id, int $user_id, string $title, string $con
             "id" => null
         ];
     } finally {
-        disconnect_db($conn, $topic_statement, $post_statement);
+        disconnect_db($conn);
     }
 }
 
@@ -287,7 +287,7 @@ function get_all_topics()
 {
     try {
         $conn = connect_db();
-        $statement = $conn->prepare("SELECT topic.id, topic.owner, users.username, topic.created, posts.content, topic.title FROM topic INNER JOIN users ON users.id = topic.owner INNER JOIN posts ON posts.id = topic.mainPost;");
+        $statement = $conn->prepare("SELECT t.id, u.username, t.title, p.id AS post_id, p.content, p.created FROM topic t JOIN users u ON u.id = t.owner JOIN posts p ON p.topic = t.id;");
 
         if (!$statement->execute())
             throw new Error("Failed to execute statement");
@@ -369,7 +369,7 @@ function change_category_name(int $category_id, string $new_name)
         $conn = connect_db();
 
         $statement = $conn->prepare("UPDATE categories SET name = ? WHERE id = ?");
-        $statement->bind_param("is", $category_id, $new_name);
+        $statement->bind_param("si", $new_name, $category_id);
 
         if (!$statement->execute())
             throw new Error("Failed to execute statement");
@@ -394,7 +394,7 @@ function change_category_description(int $category_id, string $new_description)
         $conn = connect_db();
 
         $statement = $conn->prepare("UPDATE categories SET description = ? WHERE id = ?");
-        $statement->bind_param("is", $category_id, $new_description);
+        $statement->bind_param("is", $new_description, $category_id);
 
         if (!$statement->execute())
             throw new Error("Failed to execute statement");
