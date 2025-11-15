@@ -43,9 +43,9 @@ function generatePath(string $crumb, string $I)
         <table cellpadding="2" cellspacing="2" border="0" width="700">
             <tr>
                 <td valign="top" width="500">
-                    <table bgcolor="#9df372" width="100%" cellpadding="2" cellspacing="2" border="0">
+                    <table bgcolor="#e4ffd7" width="100%" cellpadding="2" cellspacing="2" border="0">
                         <tr>
-                            <td align="left" bgcolor="#e4ffd7">
+                            <td align="left" bgcolor="#9df372">
                                 <a href="files.php">Files</a>
                                 <?php foreach ($split as $index => $crumb): ?>
                                     / <a href="files.php?path=<?= generatePath($crumb, $index) ?>"><?= $crumb ?></a>

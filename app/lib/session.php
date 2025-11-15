@@ -17,8 +17,13 @@ function verify_loggedin(bool $require_admin = false)
         if (!$user)
             throw new Exception();
 
-        if ((C98_LOCKDOWN || $require_admin) && !$user["admin"])
+        if (C98_LOCKDOWN && !$user["admin"])
             throw new Exception();
+
+        if ($require_admin && !$user["admin"]) {
+            error_message("Access denied", "You do not have permission to access this part of Cortex 98. Please contact an administrator if you believe this to be an error.");
+            die;
+        }
     } catch (Exception $e) {
         header("location: " . WEB_ROOT . "/login.php");
     }

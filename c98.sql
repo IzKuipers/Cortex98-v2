@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS `links` (
   `owner` int(11) NOT NULL,
   `name` varchar(64) NOT NULL,
   `target` varchar(64) NOT NULL,
-  `visits` int(11) NOT NULL,
+  `visits` int(11) NULL DEFAULT '0',
   `description` varchar(1024) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),

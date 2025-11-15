@@ -84,7 +84,7 @@ function NavigationBar()
         $url = $data['url'];
         $name = $data['name'];
 
-        if (!$data['hidden'])
+        if (!($data['hidden'] ?? false))
             $links .= <<<HTML
         <a style="$bg_color display: inline-block; padding: 0 5px; line-height: 16pt;" href="$url">$name</a> - 
         HTML;
@@ -99,7 +99,7 @@ function NavigationBar()
     $left_td_style = "background-color: " . $current_page["color"] . "; display: inline-block; padding: 0 5px; line-height: 16pt;";
     $left_td_name = $current_page["name"];
 
-    $left_td = $current_page["hidden"] ? <<<HTML
+    $left_td = ($current_page["hidden"] ?? false) ? <<<HTML
         <td>
             <a style="$left_td_style">$left_td_name</a>
         </td>

@@ -141,3 +141,22 @@ function delete_user_by_name(string $username)
 
     return;
 }
+
+function delete_user_by_id(int $user_id)
+{
+    try {
+        $conn = connect_db();
+    } catch (Exception $e) {
+        return;
+    }
+
+    try {
+        $statement = $conn->prepare("DELETE FROM users WHERE id = ?");
+        $statement->bind_param("i", $user_id);
+        $statement->execute();
+    } catch (Exception $e) {
+        // Silently error...
+    } finally {
+        disconnect_db($conn, $statement);
+    }
+}
