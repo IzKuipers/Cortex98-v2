@@ -14,11 +14,6 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST["command"])) {
                 create_category($_POST["name"], $_POST["description"]);
             }
             break;
-        case "delete":
-            if (isset($_POST["id"])) {
-                delete_category($_POST["id"]);
-            }
-            break;
     }
 }
 
@@ -42,34 +37,59 @@ $categories = get_all_categories();
         <?= NavigationBar() ?>
         <table border="0" cellpadding="2" cellspacing="2" width="700">
             <td width="450" valign="top">
-                <table border="0" cellpadding="4" cellspacing="0" bgcolor="#ffeeee" width="100%">
+                <table border="0" cellpadding="2" cellspacing="2" bgcolor="#ffeeee" width="100%">
+                    <colgroup>
+                        <col>
+                        <col>
+                        <col width="20">
+                        <col>
+                        <col width="20">
+                        <col>
+                    </colgroup>
                     <thead>
                         <tr bgcolor="#ffcccc">
                             <th>ID</th>
                             <th>Name</th>
+                            <th></th>
                             <th>Description</th>
+                            <th></th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($categories["items"] as $category): ?>
                             <tr>
-                                <td><?= $category["id"] ?></td>
-                                <td><?= $category["name"] ?></td>
-                                <td><?= $category["description"] ?></td>
-                                <td align="right">
-                                    <form action="" method="post" style="display: inline;">
-                                        <input type="hidden" name="id" value="<?= $category["id"] ?>">
-                                        <input type="hidden" name="command" value="delete">
-                                        <button type="submit">Delete</button>
-                                    </form>
+                                <td nowrap><?= $category["id"] ?></td>
+                                <td nowrap>
+                                    <?= $category["name"] ?>
+
+                                </td>
+                                <td>
+                                    <a href="change_category_title.php?id=<?= $category["id"] ?>"
+                                        style="text-decoration: none;">
+                                        <img src="../assets/symbols/edit.gif" alt="" border="0">
+                                    </a>
+                                </td>
+                                <td>
+                                    <?= $category["description"] ?>
+                                </td>
+                                <td>
+                                    <a href="change_category_description.php?id=<?= $category["id"] ?>"
+                                        style="text-decoration: none;">
+                                        <img src="../assets/symbols/edit.gif" alt="" border="0">
+                                    </a>
+                                </td>
+                                <td align="right" nowrap>
+                                    <a href="delete_category.php?id=<?= $category["id"] ?>" style="text-decoration: none;">
+                                        <img src="../assets/symbols/trash.gif" alt="" border="0">
+                                    </a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
             </td>
-            <td width="250">
+            <td width="250" valign="top">
                 <table border="0" cellpadding="2" cellspacing="2" bgcolor="#ffeeee" width="100%">
                     <tr nowrap align="left" bgcolor="#ffcccc">
                         <td>
@@ -90,7 +110,6 @@ $categories = get_all_categories();
                                         </td>
                                     </tr>
                                     <tr>
-
                                         <td valign="top">
                                             Description
                                         </td>

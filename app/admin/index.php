@@ -76,7 +76,7 @@ if (!$files['success'])
 
         <table border="0" cellpadding="2" cellspacing="2" width="700">
             <td width="500" valign="top">
-                <table border="0" cellpadding="4" cellspacing="0" bgcolor="#ffeeee" width="100%">
+                <table border="0" cellpadding="2" cellspacing="2" bgcolor="#ffeeee" width="100%">
                     <thead>
                         <tr bgcolor="#ffcccc">
                             <th>ID</th>
@@ -91,7 +91,11 @@ if (!$files['success'])
                                 <td><?= $user["id"] ?></td>
                                 <td><?= $user["username"] ?></td>
                                 <td><?= $user["admin"] ? "Yes" : "No" ?></td>
-                                <td align="right"><a href="deleteuser.php?id=<?= $user["id"] ?>">Delete</a></td>
+                                <td align="right">
+                                    <a href="delete_user.php?id=<?= $user["id"] ?>" style="text-decoration: none;">
+                                        <img src="../assets/symbols/trash.gif" alt="" border="0">
+                                    </a>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
