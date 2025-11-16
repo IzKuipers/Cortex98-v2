@@ -41,7 +41,8 @@ $activity = get_topic_last_activity($id);
                             <td>
                                 <a href="index.php">Forum</a> /
                                 <img src="../assets/symbols/books.gif" alt="">
-                                <a href="view_category.php?id=<?= $topic['topic']['category_id'] ?>"><?= $topic['topic']['category_name'] ?></a>
+                                <a
+                                    href="view_category.php?id=<?= $topic['topic']['category_id'] ?>"><?= $topic['topic']['category_name'] ?></a>
                                 / <img src="../assets/symbols/book.gif" alt=""> <?= $topic['topic']['title'] ?>
                             </td>
                         </tr>
@@ -49,18 +50,40 @@ $activity = get_topic_last_activity($id);
                             <td>
                                 <?php if (count($posts['items'])): ?>
                                     <?php foreach ($posts['items'] as $post): ?>
+                                        <?php
+                                        $likes = get_post_like_count($post['id']);
+                                        $has_liked = has_liked($post['id'], $session['id']);
+                                        ?>
                                         <table border="0" cellpadding="2" width="100%">
                                             <tr bgcolor="#ffe680">
                                                 <td>Post #<?= $post['id'] ?> by <?= $post['username'] ?></td>
-                                                <td align="right"><a href="like_post.php" style="text-decoration: none">
-                                                        <img src="../assets/symbols/heart.gif" style="border: none" alt="">
-                                                    </a></td>
+                                                <td align="right" nowrap>
+                                                    <?= date("d M Y, G:i:s", strtotime($post['created'])) ?>
+                                                </td>
+                                                <td align="right">
+                                                    <a href="like_post.php?id=<?= $post['id'] ?>&continue=view_topic.php?id=<?= $id ?>"
+                                                        style="text-decoration: none">
+                                                        <img src="../assets/symbols/<?= $has_liked ? "heart-remove" : "heart-add" ?>.gif"
+                                                            style="border: none" alt=""
+                                                            title="<?= $has_liked ? "Unlike this post" : "Like this post" ?>">
+                                                    </a>
+                                                    <?= $likes['count'] ?> likes
+                                                    <?php if ($post['owner'] === $session['id'] || $session['admin']): ?>
+                                                        -<a href="delete_post.php?id=<?= $post['id'] ?>&continue=view_topic.php?id=<?= $id ?>"
+                                                            style="text-decoration: none">
+                                                            <img src="../assets/symbols/trash.gif" style="border: none" alt=""
+                                                                title="Delete this post">
+                                                        </a>
+                                                    <?php endif ?>
+                                                </td>
                                             </tr>
                                             <tr>
-                                                <td>
-                                                    <?= $post['content'] ?>
+                                                <td colspan="2">
+                                                    <p>
+                                                        <?= str_replace("\n", "<br>", $post['content']) ?>
+                                                    </p>
                                                 </td>
-                                                <td width="100" bgcolor="#aaaaaa">
+                                                <td width="100">
 
                                                 </td>
                                             </tr>
@@ -76,22 +99,27 @@ $activity = get_topic_last_activity($id);
                 <td width="250" bgcolor="#eeeeff" valign="top">
                     <table border="0" cellpadding="2" cellspacing="2" width="100%" bgcolor="#eeeeff">
                         <tr bgcolor="#ccccff">
-                            <td>Statistics for <b><?= $topic['topic']['title'] ?></b></td>
+                            <td><img src="../assets/symbols/file.gif" alt=""><b>Statistics for this topic</b></td>
                         </tr>
                         <tr>
                             <td>
                                 <ul>
-                                    Post count: <b><?= count($posts['items']) ?></b>
+
+                                    <li>
+                                        Started by <b><?= $topic['topic']['username'] ?></b>
+                                    </li>
+                                    <li>
+                                        Post count: <b><?= count($posts['items']) ?></b>
+                                    </li>
+                                    <li>
+                                        Last active date:
+                                        <b><?= date("d M Y", strtotime($activity['last_activity'])) ?></b>
+                                    </li>
+                                    <li>
+                                        Last active time:
+                                        <b><?= date("G:i:s", strtotime($activity['last_activity'])) ?></b>
+                                    </li>
                                 </ul>
-                                <ul>Last active date: <b><?= date("d M, Y", strtotime($activity['last_activity'])) ?></b></ul>
-                                <p>
-                                    This topic has  posts and was last active on
-                                    <b></b>. <b><?= $topic['topic']['username'] ?></b>
-                                    is the
-                                    author of this
-                                    topic<?php if ($topic['topic']['owner'] == $session['id'])
-                                        echo " (that's you!)"; ?>.
-                                </p>
                             </td>
                         </tr>
                     </table>

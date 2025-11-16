@@ -25,7 +25,7 @@ if (!$category['success']) {
 $topics = get_category_topics($id);
 $last_activity = get_category_last_activity($id)
 
-?>
+    ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -73,7 +73,8 @@ $last_activity = get_category_last_activity($id)
                                                         <?= $topic['title'] ?>
                                                     </a>
                                                 </h2>
-                                                <p><?= $topic['content'] ?></p>
+                                                <p style="white-space: pre;">
+                                                    <?= str_replace("\n", "<br>", $topic['content']) ?></p>
                                                 <p style="margin-top: 5px; color: gray; margin-bottom: 10px;">
                                                     <?= count($posts['items']) ?> posts - by
                                                     <?= $topic['owner'] === $session['id'] ? "you! " : $topic['username'] ?>

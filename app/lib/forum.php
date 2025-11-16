@@ -396,6 +396,8 @@ function get_category_last_activity(int $category_id)
             'message' => $e->getMessage(),
             'last_activity' => null
         ];
+    } finally {
+        disconnect_db($conn, $statement);
     }
 }
 
@@ -424,6 +426,8 @@ function get_topic_last_activity(int $topic_id)
             'message' => $e->getMessage(),
             'last_activity' => null
         ];
+    } finally {
+        disconnect_db($conn, $statement);
     }
 }
 
@@ -461,6 +465,101 @@ function get_topic_by_id(int $topic_id)
             'message' => $e->getMessage(),
             'topic' => []
         ];
+    } finally {
+        disconnect_db($conn, $statement);
+    }
+}
+
+function get_post_like_count(int $post_id)
+{
+    try {
+        $conn = connect_db();
+
+        $statement = $conn->prepare("SELECT COUNT(*) as like_count FROM likes WHERE post = ?;");
+        $statement->bind_param("i", $post_id);
+
+        if (!$statement->execute())
+            throw new Exception("Failed to execute statement");
+
+        $statement->bind_result($like_count);
+        $statement->fetch();
+
+        return [
+            "success" => true,
+            "message" => "Retrieved like count successfully",
+            "count" => $like_count
+        ];
+    } catch (Exception $e) {
+        return [
+            "success" => false,
+            "message" => $e->getMessage(),
+            "count" => 0
+        ];
+    } finally {
+        disconnect_db($conn, $statement);
+    }
+}
+
+function has_liked(int $post_id, int $user_id)
+{
+    try {
+        $conn = connect_db();
+
+        $statement = $conn->prepare("SELECT COUNT(*) as like_count FROM likes WHERE post = ? AND owner = ?;");
+        $statement->bind_param("ii", $post_id, $user_id);
+
+        if (!$statement->execute())
+            throw new Exception();
+
+        $statement->bind_result($like_count);
+        $statement->fetch();
+
+        if ($like_count > 0)
+            return true;
+    } catch (Exception $e) {
+        return false;
+    } finally {
+        disconnect_db($conn, $statement);
+    }
+}
+
+function like_post(int $post_id, int $user_id)
+{
+    $has_liked = has_liked($post_id, $user_id);
+
+    if ($has_liked)
+        return false;
+
+    try {
+        $conn = connect_db();
+
+        $statement = $conn->prepare("INSERT INTO likes (owner, post) VALUES (?,?)");
+        $statement->bind_param("ii", $user_id, $post_id);
+        $statement->execute();
+    } catch (Exception $e) {
+        return false;
+    } finally {
+        disconnect_db($conn, $statement);
+    }
+}
+
+function unlike_post(int $post_id, int $user_id)
+{
+    $has_liked = has_liked($post_id, $user_id);
+
+    if (!$has_liked)
+        return false;
+
+    try {
+        $conn = connect_db();
+
+        $statement = $conn->prepare("DELETE FROM likes WHERE owner = ? AND post = ?");
+        $statement->bind_param("ii", $user_id, $post_id);
+        $statement->execute();
+    } catch (Exception $e) {
+        return false;
+    } finally {
+        disconnect_db($conn, $statement);
     }
 }
 
@@ -532,6 +631,31 @@ function delete_category(int $category_id)
         return [
             "success" => true,
             "message" => "Category deleted successfully",
+        ];
+    } catch (Exception $e) {
+        return [
+            "success" => false,
+            "message" => $e->getMessage()
+        ];
+    } finally {
+        disconnect_db($conn, $statement);
+    }
+}
+
+function delete_post(int $post_id)
+{
+    try {
+        $conn = connect_db();
+
+        $statement = $conn->prepare("DELETE FROM posts WHERE id = ?");
+        $statement->bind_param("i", $category_id);
+
+        if (!$statement->execute())
+            throw new Error("Failed to execute statement");
+
+        return [
+            "success" => true,
+            "message" => "Post deleted successfully",
         ];
     } catch (Exception $e) {
         return [
