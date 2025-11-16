@@ -26,8 +26,6 @@ if (!$posts['success']) {
     $errors[] = $posts['message'];
 }
 
-var_dump ($topics);
-
 if (count($errors) > 0) {
     error_message("Failed to load forums", implode(", ", $errors));
     die;
@@ -42,7 +40,7 @@ if (count($errors) > 0) {
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="../css/main.css">
-    <title>Forum - Cortex 98</title>
+    <title>Forums - Cortex 98</title>
 </head>
 
 <body>
@@ -51,7 +49,7 @@ if (count($errors) > 0) {
         <?= NavigationBar() ?>
         <table width="700" border="0" cellpadding="0" cellspacing="2">
             <tr>
-                <td width="500" valign="top" bgcolor="#ffcccc">
+                <td width="500" valign="top" bgcolor="#fff6d4">
                     <div style="margin: 10px;">
                         <h1>Cortex 98 Forum</h1>
                         <p>Welcome to the Cortex 98 forum! From here you can talk to other Cortex 98 users about
@@ -59,8 +57,8 @@ if (count($errors) > 0) {
                             your heart desires, from the comfort of your personal computer!</p>
                     </div>
                     <br>
-                    <table border="0" cellpadding="2" cellspacing="2" bgcolor="#ffcccc" width="100%">
-                        <tr bgcolor="#ff8888">
+                    <table border="0" cellpadding="2" cellspacing="2" bgcolor="#fff6d4" width="100%">
+                        <tr bgcolor="#ffe680">
                             <td><b>Forum Categories</b></td>
                         </tr>
                         <tr>

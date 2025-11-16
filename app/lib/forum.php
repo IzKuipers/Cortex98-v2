@@ -49,7 +49,16 @@ function create_topic(int $category_id, int $user_id, string $title, string $con
         if (!$post_statement->execute())
             throw new Exception("Failed to create topic mainpost");
 
+        $post_id = $post_statement->insert_id;
         $post_statement->close();
+
+        $update_statement = $conn->prepare("UPDATE topic SET mainPost = ? WHERE id = ?");
+        $update_statement->bind_param("ii", $post_id, $topic_id);
+
+        if (!$update_statement->execute())
+            throw new Exception("Failed to update topic to set mainpost");
+
+        $update_statement->close();
 
         return [
             "success" => true,
@@ -137,7 +146,7 @@ function get_category_topics(int $category_id)
     try {
         $conn = connect_db();
 
-        $statement = $conn->prepare("SELECT topic.id, topic.owner, users.username, topic.created, posts.content, topic.title FROM topic INNER JOIN users ON users.id = topic.owner INNER JOIN posts ON posts.id = topic.mainPost WHERE topic.category = ?;");
+        $statement = $conn->prepare("SELECT t.id, t.owner, u.username, t.created, p.content, t.title FROM topic t JOIN users u ON u.id = t.owner LEFT JOIN posts p ON p.id = t.mainPost WHERE t.category = ?;");
         $statement->bind_param("i", $category_id);
 
         if (!$statement->execute())
@@ -179,7 +188,7 @@ function get_topic_posts(int $topic_id)
     try {
         $conn = connect_db();
 
-        $statement = $conn->prepare("SELECT id, owner, users.username, content, created FROM posts INNER JOIN users ON users.id = posts.id WHERE topic = ?");
+        $statement = $conn->prepare("SELECT posts.id, posts.owner, users.username, content, created FROM posts INNER JOIN users ON users.id = posts.owner WHERE topic = ? ORDER BY created DESC;");
         $statement->bind_param("i", $topic_id);
 
         if (!$statement->execute())
@@ -361,6 +370,100 @@ function get_all_posts()
         disconnect_db($conn, $statement);
     }
 }
+
+function get_category_last_activity(int $category_id)
+{
+    try {
+        $conn = connect_db();
+
+        $statement = $conn->prepare("SELECT GREATEST( COALESCE(MAX(p.created), '0000-00-00 00:00:00'), COALESCE(MAX(t.created), '0000-00-00 00:00:00') ) AS last_activity FROM topic t LEFT JOIN posts p ON p.topic = t.id WHERE t.category = ?;");
+        $statement->bind_param("i", $category_id);
+
+        if (!$statement->execute())
+            throw new Exception("Failed to execute statement");
+
+        $statement->bind_result($last_activity);
+        $statement->fetch();
+
+        return [
+            'success' => true,
+            'message' => "Category statistic retrieved successfully",
+            'last_activity' => $last_activity
+        ];
+    } catch (Exception $e) {
+        return [
+            'success' => false,
+            'message' => $e->getMessage(),
+            'last_activity' => null
+        ];
+    }
+}
+
+function get_topic_last_activity(int $topic_id)
+{
+    try {
+        $conn = connect_db();
+
+        $statement = $conn->prepare("SELECT GREATEST(COALESCE(MAX(p.created), '0000-00-00 00:00:00'), COALESCE(t.created, '0000-00-00 00:00:00')) AS last_activity FROM topic t LEFT JOIN posts p ON p.topic = t.id WHERE t.id = ?;");
+        $statement->bind_param("i", $topic_id);
+
+        if (!$statement->execute())
+            throw new Exception("Failed to execute statement");
+
+        $statement->bind_result($last_activity);
+        $statement->fetch();
+
+        return [
+            'success' => true,
+            'message' => "Topic statistic retrieved successfully",
+            'last_activity' => $last_activity
+        ];
+    } catch (Exception $e) {
+        return [
+            'success' => false,
+            'message' => $e->getMessage(),
+            'last_activity' => null
+        ];
+    }
+}
+
+function get_topic_by_id(int $topic_id)
+{
+    try {
+        $conn = connect_db();
+
+        $statement = $conn->prepare("SELECT u.username, t.owner, t.title, p.id AS post_id, p.content, p.created, c.id, c.name FROM topic t JOIN users u ON u.id = t.owner JOIN posts p ON p.topic = t.id JOIN categories c ON t.category = c.id WHERE t.id = ?;");
+        $statement->bind_param('i', $topic_id);
+
+        if (!$statement->execute())
+            throw new Exception("Failed to execute statement");
+
+        $statement->bind_result($username, $owner, $title, $post_id, $content, $created, $category_id, $category_name);
+        $statement->fetch();
+
+        return [
+            'success' => true,
+            'message' => "Topic retrieved successfully",
+            'topic' => [
+                "username" => $username,
+                "owner" => $owner,
+                "title" => $title,
+                "post_id" => $post_id,
+                "content" => $content,
+                "created" => $created,
+                "category_id" => $category_id,
+                "category_name" => $category_name,
+            ]
+        ];
+    } catch (Exception $e) {
+        return [
+            'success' => false,
+            'message' => $e->getMessage(),
+            'topic' => []
+        ];
+    }
+}
+
 // UPDATE
 
 function change_category_name(int $category_id, string $new_name)

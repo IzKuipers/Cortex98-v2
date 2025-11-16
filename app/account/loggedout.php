@@ -10,7 +10,7 @@ require_once(__DIR__ . "/../components/headerbar.php");
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="../css/main.css">
-    <title>Document</title>
+    <title>Logged out - Cortex 98</title>
 </head>
 
 <body>
