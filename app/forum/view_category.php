@@ -73,7 +73,7 @@ $last_activity = get_category_last_activity($id)
                                                         <?= $topic['title'] ?>
                                                     </a>
                                                 </h2>
-                                                <p style="white-space: pre;">
+                                                <p>
                                                     <?= str_replace("\n", "<br>", $topic['content']) ?></p>
                                                 <p style="margin-top: 5px; color: gray; margin-bottom: 10px;">
                                                     <?= count($posts['items']) ?> posts - by

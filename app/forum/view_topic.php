@@ -68,7 +68,8 @@ $activity = get_topic_last_activity($id);
                                                             title="<?= $has_liked ? "Unlike this post" : "Like this post" ?>">
                                                     </a>
                                                     <?= $likes['count'] ?> likes
-                                                    <?php if ($post['owner'] === $session['id'] || $session['admin']): ?>
+
+                                                    <?php if (($post['id'] !== $topic['topic']['post_id']) && ($post['owner'] === $session['id']) || $session['admin']): ?>
                                                         -<a href="delete_post.php?id=<?= $post['id'] ?>&continue=view_topic.php?id=<?= $id ?>"
                                                             style="text-decoration: none">
                                                             <img src="../assets/symbols/trash.gif" style="border: none" alt=""
