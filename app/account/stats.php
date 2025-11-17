@@ -58,7 +58,6 @@ function get_user_stats()
             ]
         ];
     } catch (Exception $e) {
-        echo $e;
         return [
             "success" => false,
             "message" => $e->getMessage(),
