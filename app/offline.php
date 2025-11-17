@@ -1,6 +1,6 @@
 <?php
 
-require_once(__DIR__ . "/../components/headerbar.php");
+require_once(__DIR__ . "/components/headerbar.php");
 
 ?>
 
@@ -18,7 +18,7 @@ require_once(__DIR__ . "/../components/headerbar.php");
         <table width="450" cellspacing="20" style="margin-top: 30px">
             <tr>
                 <td valign="top">
-                    <img src="../assets/c98bsod.gif" alt="">
+                    <img src="assets/c98bsod.gif" alt="">
                 </td>
                 <td>
                     <table width="100%">
