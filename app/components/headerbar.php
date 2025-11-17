@@ -3,9 +3,9 @@
 require_once(__DIR__ . "/../lib/session.php");
 require_once(__DIR__ . "/../../config.php");
 
-function HeaderBar()
+function HeaderBar(bool $offline = false)
 {
-    $session = get_user_from_session();
+    $session = !$offline ? get_user_from_session() : null;
     $username = $session ? $session["username"] : "Stranger";
     $web_root = WEB_ROOT;
 

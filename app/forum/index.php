@@ -41,6 +41,8 @@ if (count($errors) > 0) {
     die;
 }
 
+var_dump($topics['items']);
+
 ?>
 
 
