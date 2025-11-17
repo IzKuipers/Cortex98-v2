@@ -6,13 +6,19 @@ require_once(__DIR__ . "/lib/session.php");
 require_once(__DIR__ . "/lib/error.php");
 
 if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST["username"], $_POST["password"])) {
-    $username = $_POST["username"];
-    $password = $_POST["password"];
+    $username = htmlspecialchars($_POST["username"]);
+    $password = htmlspecialchars($_POST["password"]);
 
     $result = login($username, $password);
 
     if (!$result['success']) {
-        error_message("Login failed", "We could not log you in. " . $result['message'], "login.php", "Try again");
+        error_message(
+            "Login failed",
+            "We could not log you in. " . $result['message'],
+            "login.php",
+            "Try again"
+        );
+
         die;
     }
 

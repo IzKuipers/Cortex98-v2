@@ -5,6 +5,7 @@ require_once(__DIR__ . "/lib/fs.php");
 require_once(__DIR__ . "/account/stats.php");
 require_once(__DIR__ . "/components/headerbar.php");
 require_once(__DIR__ . "/components/navigation.php");
+require_once(__DIR__ . "/components/legalnotice.php");
 
 $start_time = date_create()->format('Uv');
 
@@ -202,10 +203,7 @@ $end_time = date_create()->format('Uv') - $start_time;
                 </td>
             </tr>
         </table>
-        <p style="color: gray;">
-            The administrators of this web site reserve the right to remove inappropriate or illegal content. <a
-                href="legal.php">Legal</a>
-        </p>
+        <?= LegalNotice() ?>
     </center>
 </body>
 

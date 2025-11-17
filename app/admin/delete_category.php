@@ -9,8 +9,7 @@ $session = get_user_from_session();
 $continue = $_GET["continue"] ?? WEB_ROOT . "/admin/manage_categories.php";
 
 if (!isset($_GET["id"])) {
-    error_message("Invalid link", "Sorry! This URL is not valid. You might've taken a wrong turn somewhere...", $continue);
-    die;
+    invalid_link($continue);
 }
 
 $id = $_GET["id"];
@@ -19,7 +18,12 @@ if (isset($_GET["confirm"])) {
     $result = delete_category($id);
 
     if (!$result['success']) {
-        error_message("Failed to delete category", "The specified category could not be deleted. " . $result['message'], $continue);
+        error_message(
+            "Failed to delete category",
+            "The specified category could not be deleted. " . $result['message'],
+            $continue
+        );
+
         die;
     }
 

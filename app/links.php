@@ -7,12 +7,18 @@ require_once(__DIR__ . "/lib/links.php");
 verify_loggedin();
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["name"], $_POST["url"])) {
-    $description = isset($_POST["description"]) ? $_POST["description"] : "";
+    $description = htmlspecialchars($_POST["description"] ?? "");
 
-    $result = create_link_as_session(htmlspecialchars($_POST["name"]), htmlspecialchars($_POST["url"]), htmlspecialchars($description));
+    $result = create_link_as_session(htmlspecialchars($_POST["name"]), htmlspecialchars($_POST["url"]),$description);
 
     if (!$result["success"]) {
-        error_message("Couldn't add link", "An error occurred while trying to add the link you specified. " . $result["message"], "links.php");
+        error_message(
+            "Couldn't add link",
+            "An error occurred while trying to add the link you specified. " . $result["message"],
+            "links.php"
+        );
+
+        die;
     }
 }
 

@@ -11,8 +11,7 @@ $session = get_user_from_session();
 $continue = $_GET["continue"] ?? WEB_ROOT . "/files.php";
 
 if (!isset($_GET["path"])) {
-    error_message("Invalid link", "Sorry! This URL is not valid. You might've taken a wrong turn somewhere...", $continue);
-    die;
+    invalid_link($continue);
 }
 
 $path = $_GET["path"];
@@ -21,7 +20,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_FILES["upload"])) {
     $result = $fs->uploadFile($session["id"], $path, $_FILES["upload"]);
 
     if (!$result["success"]) {
-        error_message("Failed to upload file", "The file you're trying to upload couldn't be processed. " . $result["message"], $continue, "Okay");
+        error_message(
+            "Failed to upload file",
+            "The file you're trying to upload couldn't be processed. " . $result["message"],
+            $continue,
+            "Okay"
+        );
+
         die;
     }
 

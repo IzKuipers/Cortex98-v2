@@ -4,16 +4,15 @@ require_once(__DIR__ . "/lib/error.php");
 require_once(__DIR__ . "/lib/session.php");
 require_once(__DIR__ . "/lib/links.php");
 
-$continue_url = "links.php";
+$continue = "links.php";
 
 if (isset($_GET["continue"]))
-    $continue_url = $_GET["continue"];
+    $continue = $_GET["continue"];
 
 verify_loggedin();
 
 if (!isset($_GET["linkid"])) {
-    error_message("Invalid link", "Sorry! This URL is not valid. You might've taken a wrong turn somewhere...", $continue_url);
-    die;
+    invalid_link($continue);
 }
 
 $link_id = $_GET['linkid'];
@@ -21,8 +20,8 @@ $link_id = $_GET['linkid'];
 confirm_message(
     "Delete link?",
     "Are you sure you want to delete this link? This cannot be undone.",
-    $continue_url,
-    "deletelinkconfirm.php?linkid=$link_id&continue=$continue_url",
+    $continue,
+    "deletelinkconfirm.php?linkid=$link_id&continue=$continue",
     "Cancel",
     "Confirm"
-);  
+);

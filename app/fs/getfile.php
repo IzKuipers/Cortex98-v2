@@ -6,8 +6,7 @@ require_once(__DIR__ . "/../lib/fs.php");
 verify_loggedin();
 
 if (!isset($_GET["id"])) {
-    error_message("Invalid link", "Sorry! This URL is not valid. You might've taken a wrong turn somewhere...", $continue);
-    die;
+    invalid_link();
 }
 
 $id = $_GET["id"];

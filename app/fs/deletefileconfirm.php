@@ -10,20 +10,31 @@ $session = get_user_from_session();
 $continue = $_GET["continue"] ?? "files.php";
 
 if (!isset($_GET["id"])) {
-    error_message("Invalid link", "Sorry! This URL is not valid. You might've taken a wrong turn somewhere...", $continue);
-    die;
+    invalid_link($continue);
 }
 
 $id = $_GET["id"];
 $existing = $fs->getFileInfo($_GET["id"]);
 
 if (!$existing) {
-    error_message("Failed to delete item", "The specified item could not be found. Please try again.", $continue, "Try again");
+    error_message(
+        "Failed to delete item",
+        "The specified item could not be found. Please try again.",
+        $continue,
+        "Try again"
+    );
+
     die;
 }
 
 if ($existing["owner"] != $session["id"] && !$session["admin"]) {
-    error_message("Permission denied", "You are not the owner of this " . $existing["type"] . ". Only the owner can delete it.", $continue, "Okay");
+    error_message(
+        "Permission denied",
+        "You are not the owner of this " . $existing["type"] . ". Only the owner can delete it.",
+        $continue,
+        "Okay"
+    );
+
     die;
 }
 
@@ -34,7 +45,12 @@ if ($existing["type"] === "file") {
 }
 
 if (!$result["success"]) {
-    error_message("Failed to delete " . $existing["type"], "The " . $existing["type"] . " could not be deleted. " . $result["message"],$continue);
+    error_message(
+        "Failed to delete " . $existing["type"],
+        "The " . $existing["type"] . " could not be deleted. " . $result["message"],
+        $continue
+    );
+
     die;
 }
 

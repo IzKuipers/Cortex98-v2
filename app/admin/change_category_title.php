@@ -11,8 +11,7 @@ $session = get_user_from_session();
 $continue = $_GET["continue"] ?? WEB_ROOT . "/admin/manage_categories.php";
 
 if (!isset($_GET["id"])) {
-    error_message("Invalid link", "Sorry! This URL is not valid. You might've taken a wrong turn somewhere...", $continue);
-    die;
+    invalid_link($continue);
 }
 
 $id = $_GET["id"];
@@ -21,14 +20,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["newtitle"])) {
     $new_title = trim($_POST["newtitle"]);
 
     if (!$new_title) {
-        error_message("Invalid title", "Please enter a new title for this category.", 'admin/change_category_title.php?id=' . $id . "&continue=" . $continue, 'Understood');
+        error_message(
+            "Invalid title",
+            "Please enter a new title for this category.",
+            'admin/change_category_title.php?id=' . $id . "&continue=" . $continue,
+            'Understood'
+        );
+
         die;
     }
 
     $result = change_category_name($id, $new_title);
 
     if (!$result["success"]) {
-        error_message("Failed to rename category", "The category could not be renamed. " . $result["message"], $continue, "Okay");
+        error_message(
+            "Failed to rename category",
+            "The category could not be renamed. " . $result["message"],
+            $continue,
+            "Okay"
+        );
+
+        die;
     }
 
     header("location: $continue");

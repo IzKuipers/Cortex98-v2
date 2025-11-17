@@ -6,16 +6,26 @@ require_once(__DIR__ . "/lib/user.php");
 require_once(__DIR__ . "/lib/error.php");
 
 if (C98_DISABLE_REGISTRATION) {
-    error_message("Registration disabled", "Sorry! Registration is currently disabled. This might be because of maintenance or a server problem somewhere. Please try again later.");
+    error_message(
+        "Registration disabled",
+        "Sorry! Registration is currently disabled. This might be because of maintenance or a server problem somewhere. Please try again later."
+    );
+
+    die;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST["username"], $_POST["password"], $_POST["confirm"])) {
-    $username = $_POST["username"];
-    $password = $_POST["password"];
-    $confirm = $_POST["confirm"];
+    $username = htmlspecialchars($_POST["username"]);
+    $password = htmlspecialchars($_POST["password"]);
+    $confirm = htmlspecialchars($_POST["confirm"]);
 
     if ($password != $confirm) {
-        error_message("Registration failed", "The passwords you entered don't match up. Please try again.", "register.php");
+        error_message(
+            "Registration failed",
+            "The passwords you entered don't match up. Please try again.",
+            "register.php"
+        );
+
         die;
     }
 
@@ -23,7 +33,12 @@ if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST["username"], $_POST["p
 
     if ($result != CreateUserResult::Success) {
         $caption = $CreateUserResultCaptions[(int) $result];
-        error_message("Registration failed", "$caption. Please try again.", "register.php");
+        error_message(
+            "Registration failed",
+            "$caption. Please try again.",
+            "register.php"
+        );
+
         die;
     }
 

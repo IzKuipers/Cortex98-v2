@@ -43,3 +43,14 @@ function confirm_message(string $title, string $message, string $cancel_url, str
 
     header("location: " . WEB_ROOT . "/confirm.php");
 }
+
+function invalid_link(string $continue = WEB_ROOT . "/index.php")
+{
+    error_message(
+        "Invalid link",
+        "Sorry! This URL is not valid. You might've taken a wrong turn somewhere...",
+        $continue
+    );
+    
+    die;
+}

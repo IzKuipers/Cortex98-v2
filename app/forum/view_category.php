@@ -18,14 +18,19 @@ if ($id < 0) {
 $category = get_category_by_id($id);
 
 if (!$category['success']) {
-    error_message("Failed to view category", "An error occurred while reading the specified category. " . $category['message'], "forum/index.php");
+    error_message(
+        "Failed to view category",
+        "An error occurred while reading the specified category. " . $category['message'],
+        "forum/index.php"
+    );
+
     die;
 }
 
 $topics = get_category_topics($id);
 $last_activity = get_category_last_activity($id)
 
-    ?>
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -74,7 +79,8 @@ $last_activity = get_category_last_activity($id)
                                                     </a>
                                                 </h2>
                                                 <p>
-                                                    <?= str_replace("\n", "<br>", $topic['content']) ?></p>
+                                                    <?= str_replace("\n", "<br>", $topic['content']) ?>
+                                                </p>
                                                 <p style="margin-top: 5px; color: gray; margin-bottom: 10px;">
                                                     <?= count($posts['items']) ?> posts - by
                                                     <?= $topic['owner'] === $session['id'] ? "you! " : $topic['username'] ?>
@@ -104,7 +110,12 @@ $last_activity = get_category_last_activity($id)
                                         <b><?= count($topics['items']) ?></b> topics
                                     </li>
                                     <li>
-                                        Last activity:<br><b><?= $last_activity['last_activity'] ?></b>
+                                        Last active date:
+                                        <b><?= date("d M Y", strtotime($last_activity['last_activity'])) ?></b>
+                                    </li>
+                                    <li>
+                                        Last active time:
+                                        <b><?= date("G:i:s", strtotime($last_activity['last_activity'])) ?></b>
                                     </li>
                                 </ul>
                             </td>

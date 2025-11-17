@@ -21,7 +21,11 @@ function verify_loggedin(bool $require_admin = false)
             throw new Exception();
 
         if ($require_admin && !$user["admin"]) {
-            error_message("Access denied", "You do not have permission to access this part of Cortex 98. Please contact an administrator if you believe this to be an error.");
+            error_message(
+                "Access denied",
+                "You do not have permission to access this part of Cortex 98. Please contact an administrator if you believe this to be an error."
+            );
+            
             die;
         }
     } catch (Exception $e) {

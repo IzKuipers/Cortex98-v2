@@ -27,7 +27,11 @@ if (!$posts['success']) {
 }
 
 if (count($errors) > 0) {
-    error_message("Failed to load forums", implode(", ", $errors));
+    error_message(
+        "Failed to load forums",
+        implode(", ", $errors)
+    );
+    
     die;
 }
 
@@ -76,7 +80,8 @@ if (count($errors) > 0) {
                                                 </h2>
                                                 <p><?= $category['description'] ?></p>
                                                 <p style="margin-top: 5px; color: gray; margin-bottom: 10px;">
-                                                    <?= count($topics['items']) ?> topics</p>
+                                                    <?= count($topics['items']) ?> topics
+                                                </p>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>

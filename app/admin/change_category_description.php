@@ -11,8 +11,7 @@ $session = get_user_from_session();
 $continue = $_GET["continue"] ?? WEB_ROOT . "/admin/manage_categories.php";
 
 if (!isset($_GET["id"])) {
-    error_message("Invalid link", "Sorry! This URL is not valid. You might've taken a wrong turn somewhere...", $continue);
-    die;
+    invalid_link($continue);
 }
 
 $id = $_GET["id"];
@@ -21,14 +20,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["newdesc"])) {
     $new_description = trim($_POST["newdesc"]);
 
     if (!$new_description) {
-        error_message("Invalid description", "Please enter a new description for this category.", 'admin/change_category_description.php?id=' . $id . "&continue=" . $continue, 'Understood');
+        error_message(
+            "Invalid description",
+            "Please enter a new description for this category.",
+            'admin/change_category_description.php?id=' . $id . "&continue=" . $continue,
+            'Understood'
+        );
+
         die;
     }
 
     $result = change_category_description($id, $new_description);
 
     if (!$result["success"]) {
-        error_message("Failed to update category", "The category description could not be updated. " . $result["message"], $continue, "Okay");
+        error_message(
+            "Failed to update category",
+            "The category description could not be updated. " . $result["message"],
+            $continue,
+            "Okay"
+        );
+
+        die;
     }
 
     header("location: $continue");

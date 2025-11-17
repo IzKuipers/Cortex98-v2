@@ -11,23 +11,35 @@ $session = get_user_from_session();
 $continue = $_GET["continue"] ?? WEB_ROOT . "/files.php";
 
 if (!isset($_GET["path"])) {
-    error_message("Invalid link", "Sorry! This URL is not valid. You might've taken a wrong turn somewhere...", $continue);
-    die;
+    invalid_link($continue);
 }
 
 $path = $_GET["path"];
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["foldername"])) {
-    $folder_name = trim($_POST["foldername"]);
+    $folder_name = htmlspecialchars(trim($_POST["foldername"]));
     if (!preg_match("/^[a-zA-Z0-9 \-]+$/", $folder_name)) {
-        error_message("Failed to create folder", "The folder name you specified contains characters we don't allow. Only alphanumeric characters or spaces are allowed.", $_SERVER['REQUEST_URI'], "Understood");
+        error_message(
+            "Failed to create folder",
+            "The folder name you specified contains characters we don't allow. Only alphanumeric characters or spaces are allowed.",
+            $_SERVER['REQUEST_URI'],
+            "Understood"
+        );
+
         die;
     }
 
     $result = $fs->createFolder($session["id"], $path . "/" . $_POST["foldername"]);
 
     if (!$result["success"]) {
-        error_message("Failed to create folder", "The folder you entered could not be created. " . $result["message"], $continue, "Okay");
+        error_message(
+            "Failed to create folder",
+            "The folder you entered could not be created. " . $result["message"],
+            $continue,
+            "Okay"
+        );
+
+        die;
     }
 
     header("location: $continue");

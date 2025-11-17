@@ -4,6 +4,7 @@ require_once(__DIR__ . "/../components/headerbar.php");
 require_once(__DIR__ . "/../components/navigation.php");
 require_once(__DIR__ . "/../lib/session.php");
 require_once(__DIR__ . "/../lib/forum.php");
+require_once(__DIR__ . "/../lib/error.php");
 
 verify_loggedin();
 $session = get_user_from_session();
@@ -11,20 +12,24 @@ $session = get_user_from_session();
 $continue = $_GET["continue"] ?? WEB_ROOT . "/forum/index.php";
 
 if (!isset($_GET["id"])) {
-    error_message("Invalid link", "Sorry! This URL is not valid. You might've taken a wrong turn somewhere...", $continue);
-    die;
+    invalid_link($continue);
 }
 
 $id = $_GET["id"];
 
 if ($_SERVER['REQUEST_METHOD'] === "POST" && isset($_POST['title'], $_POST['content'])) {
-    $title = $_POST['title'];
-    $content = $_POST['content'];
+    $title = htmlspecialchars($_POST['title']);
+    $content = htmlspecialchars($_POST['content']);
 
     $result = create_topic(intval($id), $session['id'], $title, $content);
 
     if (!$result['success']) {
-        error_message("Failed to create topic", "An error occurred while creating the topic. " . $result['message'], 'forum/view_category.php?id=' . $id);
+        error_message(
+            "Failed to create topic",
+            "An error occurred while creating the topic. " . $result['message'],
+            'forum/view_category.php?id=' . $id
+        );
+
         die;
     }
 

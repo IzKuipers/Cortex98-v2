@@ -76,13 +76,13 @@ function create_topic(int $category_id, int $user_id, string $title, string $con
     }
 }
 
-function create_post(int $topic_id, int $user_id, string $content)
+function create_post(int $topic_id, int $user_id, string $content, ?int $reply_id)
 {
     try {
         $conn = connect_db();
 
-        $statement = $conn->prepare("INSERT INTO posts(owner, topic, content) VALUES (?,?,?)");
-        $statement->bind_param("iis", $user_id, $topic_id, $content);
+        $statement = $conn->prepare("INSERT INTO posts(owner, topic, content, repliesTo) VALUES (?,?,?,?)");
+        $statement->bind_param("iisi", $user_id, $topic_id, $content, $reply_id);
 
         if (!$statement->execute())
             throw new Error("Failed to execute statement");
@@ -188,13 +188,13 @@ function get_topic_posts(int $topic_id)
     try {
         $conn = connect_db();
 
-        $statement = $conn->prepare("SELECT posts.id, posts.owner, users.username, content, created FROM posts INNER JOIN users ON users.id = posts.owner WHERE topic = ? ORDER BY created DESC;");
+        $statement = $conn->prepare("SELECT posts.id, posts.owner, posts.repliesTo, users.username, content, created FROM posts INNER JOIN users ON users.id = posts.owner WHERE topic = ? ORDER BY created DESC;");
         $statement->bind_param("i", $topic_id);
 
         if (!$statement->execute())
             throw new Error("Failed to execute statement");
 
-        $statement->bind_result($id, $owner, $username, $content, $created);
+        $statement->bind_result($id, $owner, $repliesTo, $username, $content, $created);
         $result = [];
 
         while ($statement->fetch()) {
@@ -203,7 +203,8 @@ function get_topic_posts(int $topic_id)
                 "owner" => $owner,
                 "username" => $username,
                 "content" => $content,
-                "created" => $created
+                "created" => $created,
+                "replies_to" => $repliesTo
             ];
         }
 
@@ -296,12 +297,12 @@ function get_all_topics()
 {
     try {
         $conn = connect_db();
-        $statement = $conn->prepare("SELECT t.id, u.username, t.title, p.id AS post_id, p.content, p.created FROM topic t JOIN users u ON u.id = t.owner JOIN posts p ON p.topic = t.id;");
+        $statement = $conn->prepare("SELECT t.id, u.username, t.title, p.id AS post_id, p.content, p.created, locked FROM topic t JOIN users u ON u.id = t.owner JOIN posts p ON p.topic = t.id;");
 
         if (!$statement->execute())
             throw new Error("Failed to execute statement");
 
-        $statement->bind_result($id, $owner, $username, $created, $content, $title);
+        $statement->bind_result($id, $owner, $username, $created, $content, $title, $locked);
 
         $result = [];
 
@@ -313,6 +314,7 @@ function get_all_topics()
                 "created" => $created,
                 "content" => $content,
                 "title" => $title,
+                "locked" => $locked
             ];
         }
 
@@ -385,6 +387,9 @@ function get_category_last_activity(int $category_id)
         $statement->bind_result($last_activity);
         $statement->fetch();
 
+        if (!$last_activity)
+            throw new Exception("The specified category does not exist.");
+
         return [
             'success' => true,
             'message' => "Category statistic retrieved successfully",
@@ -415,6 +420,9 @@ function get_topic_last_activity(int $topic_id)
         $statement->bind_result($last_activity);
         $statement->fetch();
 
+        if (!$last_activity)
+            throw new Exception("The specified topic does not exist.");
+
         return [
             'success' => true,
             'message' => "Topic statistic retrieved successfully",
@@ -436,14 +444,17 @@ function get_topic_by_id(int $topic_id)
     try {
         $conn = connect_db();
 
-        $statement = $conn->prepare("SELECT u.username, t.owner, t.title, p.id AS post_id, p.content, p.created, c.id, c.name FROM topic t JOIN users u ON u.id = t.owner JOIN posts p ON p.topic = t.id JOIN categories c ON t.category = c.id WHERE t.id = ?;");
+        $statement = $conn->prepare("SELECT u.username, t.owner, t.title, p.id AS post_id, p.content, p.created, c.id, c.name, t.locked FROM topic t JOIN users u ON u.id = t.owner JOIN posts p ON p.topic = t.id JOIN categories c ON t.category = c.id WHERE t.id = ?;");
         $statement->bind_param('i', $topic_id);
 
         if (!$statement->execute())
             throw new Exception("Failed to execute statement");
 
-        $statement->bind_result($username, $owner, $title, $post_id, $content, $created, $category_id, $category_name);
+        $statement->bind_result($username, $owner, $title, $post_id, $content, $created, $category_id, $category_name, $locked);
         $statement->fetch();
+
+        if (!$username)
+            throw new Exception("The specified topic does not exist.");
 
         return [
             'success' => true,
@@ -457,6 +468,7 @@ function get_topic_by_id(int $topic_id)
                 "created" => $created,
                 "category_id" => $category_id,
                 "category_name" => $category_name,
+                "locked" => $locked
             ]
         ];
     } catch (Exception $e) {
@@ -487,7 +499,7 @@ function get_post_like_count(int $post_id)
         return [
             "success" => true,
             "message" => "Retrieved like count successfully",
-            "count" => $like_count
+            "count" => $like_count ?? 0
         ];
     } catch (Exception $e) {
         return [
@@ -615,6 +627,34 @@ function change_category_description(int $category_id, string $new_description)
     }
 }
 
+function set_topic_lock(int $topic_id, int $locked)
+{
+    try {
+        if ($locked !== 1 && $locked !== 0)
+            throw new Exception("Invalid lock state '$locked'.");
+
+        $conn = connect_db();
+
+        $statement = $conn->prepare("UPDATE topic SET locked = ? WHERE id = ?");
+        $statement->bind_param("ii", $locked, $topic_id);
+
+        if (!$statement->execute())
+            throw new Exception("Failed to execute statement");
+
+        return [
+            "success" => true,
+            "message" => "Topic updated successfully"
+        ];
+    } catch (Exception $e) {
+        return [
+            "success" => false,
+            "message" => $e->getMessage()
+        ];
+    } finally {
+        disconnect_db($conn, $statement);
+    }
+}
+
 // DELETE
 
 function delete_category(int $category_id)
@@ -648,7 +688,7 @@ function delete_post(int $post_id)
         $conn = connect_db();
 
         $statement = $conn->prepare("DELETE FROM posts WHERE id = ?");
-        $statement->bind_param("i", $category_id);
+        $statement->bind_param("i", $post_id);
 
         if (!$statement->execute())
             throw new Error("Failed to execute statement");
@@ -665,4 +705,23 @@ function delete_post(int $post_id)
     } finally {
         disconnect_db($conn, $statement);
     }
+}
+
+// CHECKS
+
+function can_delete_post(array $post, array $topic, array $session)
+{
+    $is_admin = $session['admin'];
+    $is_locked = $topic['topic']['locked'];
+
+    if ($post['id'] === $topic['topic']['post_id'])
+        return false;
+
+    if ($is_admin)
+        return true;
+
+    if ($is_locked)
+        return false;
+
+    return $post['owner'] === $session['id'];
 }

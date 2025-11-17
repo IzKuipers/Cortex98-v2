@@ -14,7 +14,13 @@ $contents = $fs->readFolder($path);
 $fs_usage = $fs->get_fs_size() ?? 0;
 
 if (!$contents["success"]) {
-    error_message("Failed to read folder", "The folder you tried to access could not be read. " . $contents["message"], "files.php");
+    error_message(
+        "Failed to read folder",
+        "The folder you tried to access could not be read. " . $contents["message"],
+        "files.php"
+    );
+    
+    die;
 }
 
 $split = explode("/", $path);
@@ -184,7 +190,8 @@ function generatePath(string $crumb, string $I)
                                     </ul>
                                     <!-- <progress max="<?= FS_MAX_SIZE ?>" value="<?= $fs_usage ?>"></progress> -->
                                 <?php else: ?>
-                                    <img src="assets/symbols/warning.gif" alt=""> Failed to get storage usage information. The filesystem might still be empty, or there's a problem with the database.
+                                    <img src="assets/symbols/warning.gif" alt=""> Failed to get storage usage information.
+                                    The filesystem might still be empty, or there's a problem with the database.
                                 <?php endif ?>
                             </td>
                         </tr>
