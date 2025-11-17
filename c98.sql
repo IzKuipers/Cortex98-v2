@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Nov 14, 2025 at 10:28 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Host: localhost
+-- Generation Time: Nov 17, 2025 at 09:08 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS `links` (
   `owner` int(11) NOT NULL,
   `name` varchar(64) NOT NULL,
   `target` varchar(64) NOT NULL,
-  `visits` int(11) NULL DEFAULT '0',
+  `visits` int(11) DEFAULT 0,
   `description` varchar(1024) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`),
@@ -96,10 +96,13 @@ CREATE TABLE IF NOT EXISTS `posts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `topic` int(11) NOT NULL,
   `owner` int(11) NOT NULL,
+  `repliesTo` int(11) DEFAULT NULL,
   `content` varchar(4096) NOT NULL DEFAULT '',
   `created` datetime NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
-  KEY `posts__owner` (`owner`)
+  KEY `posts__owner` (`owner`),
+  KEY `posts__topic` (`topic`),
+  KEY `posts__repliesTo` (`repliesTo`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -129,6 +132,8 @@ CREATE TABLE IF NOT EXISTS `topic` (
   `created` datetime NOT NULL DEFAULT current_timestamp(),
   `mainPost` int(11) DEFAULT NULL,
   `category` int(11) DEFAULT NULL,
+  `locked` int(11) NOT NULL DEFAULT 0,
+  `pinned` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `topic__mainPost` (`mainPost`),
   KEY `topic__owner` (`owner`)
@@ -176,7 +181,9 @@ ALTER TABLE `links`
 -- Constraints for table `posts`
 --
 ALTER TABLE `posts`
-  ADD CONSTRAINT `posts__owner` FOREIGN KEY (`owner`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `posts__owner` FOREIGN KEY (`owner`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `posts__repliesTo` FOREIGN KEY (`repliesTo`) REFERENCES `posts` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  ADD CONSTRAINT `posts__topic` FOREIGN KEY (`topic`) REFERENCES `topic` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `tokens`
