@@ -219,7 +219,9 @@ function local_get_post_by_id(int $post_id): array|null
                         <!-- TOPIC STATISTICS HEADER -->
 
                         <tr bgcolor="#ccccff">
-                            <td nowrap><img src="../assets/symbols/file.gif" alt=""><b>Statistics for this topic</b>
+                            <td nowrap>
+                                <img src="../assets/symbols/file.gif" alt="">
+                                <b>Statistics for this topic</b>
                             </td>
 
                             <!-- LOCK/UNLOCK BUTTON -->
@@ -258,7 +260,7 @@ function local_get_post_by_id(int $post_id): array|null
                         <!-- TOPIC STATISTICS CONTENT -->
 
                         <tr>
-                            <td>
+                            <td colspan="2">
                                 <ul>
 
                                     <li>
