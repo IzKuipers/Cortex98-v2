@@ -160,3 +160,20 @@ function delete_user_by_id(int $user_id)
         disconnect_db($conn, $statement);
     }
 }
+
+function delete_all_tokens_except(int $current_user_id)
+{
+    try {
+        $conn = connect_db();
+
+        $statement = $conn->prepare("DELETE FROM tokens WHERE NOT owner = ?");
+        $statement->bind_param("i", $current_user_id);
+        $statement->execute();
+
+        return true;
+    } catch (Exception $e) {
+        return false;
+    } finally {
+        disconnect_db($conn, $statement);
+    }
+}

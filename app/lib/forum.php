@@ -146,7 +146,7 @@ function get_category_topics(int $category_id)
     try {
         $conn = connect_db();
 
-        $statement = $conn->prepare("SELECT t.id, t.owner, u.username, t.created, p.content, t.title FROM topic t JOIN users u ON u.id = t.owner LEFT JOIN posts p ON p.id = t.mainPost WHERE t.category = ?;");
+        $statement = $conn->prepare("SELECT t.id, t.owner, u.username, t.created, p.content, t.title FROM topic t JOIN users u ON u.id = t.owner LEFT JOIN posts p ON p.id = t.mainPost WHERE t.category = ? ORDER BY t.created DESC;");
         $statement->bind_param("i", $category_id);
 
         if (!$statement->execute())
@@ -211,6 +211,47 @@ function get_topic_posts(int $topic_id)
         return [
             "success" => true,
             "message" => "Posts retrieved successfully",
+            "items" => $result
+        ];
+    } catch (Exception $e) {
+        return [
+            "success" => false,
+            "message" => $e->getMessage(),
+            "items" => []
+        ];
+    } finally {
+        disconnect_db($conn, $statement);
+    }
+}
+
+function get_pinned_topics()
+{
+    try {
+        $conn = connect_db();
+        $statement = $conn->prepare("SELECT t.id, t.owner, u.username, t.title, p.id AS post_id, p.content, p.created, locked FROM topic t JOIN users u ON u.id = t.owner JOIN posts p ON p.topic = t.id WHERE t.pinned = 1 ORDER BY t.created ASC;");
+
+        if (!$statement->execute())
+            throw new Error("Failed to execute statement");
+
+        $statement->bind_result($id, $owner, $username, $title, $post_id, $content, $created, $locked);
+
+        $result = [];
+
+        while ($statement->fetch()) {
+            $result[] = [
+                "id" => $id,
+                "owner" => $owner,
+                "username" => $username,
+                "created" => $created,
+                "content" => $content,
+                "title" => $title,
+                "locked" => $locked
+            ];
+        }
+
+        return [
+            "success" => true,
+            "message" => "Topics retrieved sucessfully",
             "items" => $result
         ];
     } catch (Exception $e) {
@@ -297,7 +338,7 @@ function get_all_topics()
 {
     try {
         $conn = connect_db();
-        $statement = $conn->prepare("SELECT t.id, u.username, t.title, p.id AS post_id, p.content, p.created, locked FROM topic t JOIN users u ON u.id = t.owner JOIN posts p ON p.topic = t.id;");
+        $statement = $conn->prepare("SELECT t.id, u.username, t.title, p.id AS post_id, p.content, p.created, locked FROM topic t JOIN users u ON u.id = t.owner JOIN posts p ON p.topic = t.id ORDER BY t.created ASC;");
 
         if (!$statement->execute())
             throw new Error("Failed to execute statement");
@@ -444,13 +485,13 @@ function get_topic_by_id(int $topic_id)
     try {
         $conn = connect_db();
 
-        $statement = $conn->prepare("SELECT u.username, t.owner, t.title, p.id AS post_id, p.content, p.created, c.id, c.name, t.locked FROM topic t JOIN users u ON u.id = t.owner JOIN posts p ON p.topic = t.id JOIN categories c ON t.category = c.id WHERE t.id = ?;");
+        $statement = $conn->prepare("SELECT u.username, t.owner, t.title, p.id AS post_id, p.content, p.created, c.id, c.name, t.locked, t.pinned FROM topic t JOIN users u ON u.id = t.owner JOIN posts p ON p.topic = t.id JOIN categories c ON t.category = c.id WHERE t.id = ?;");
         $statement->bind_param('i', $topic_id);
 
         if (!$statement->execute())
             throw new Exception("Failed to execute statement");
 
-        $statement->bind_result($username, $owner, $title, $post_id, $content, $created, $category_id, $category_name, $locked);
+        $statement->bind_result($username, $owner, $title, $post_id, $content, $created, $category_id, $category_name, $locked, $pinned);
         $statement->fetch();
 
         if (!$username)
@@ -468,7 +509,8 @@ function get_topic_by_id(int $topic_id)
                 "created" => $created,
                 "category_id" => $category_id,
                 "category_name" => $category_name,
-                "locked" => $locked
+                "locked" => $locked,
+                "pinned" => $pinned
             ]
         ];
     } catch (Exception $e) {
@@ -476,6 +518,46 @@ function get_topic_by_id(int $topic_id)
             'success' => false,
             'message' => $e->getMessage(),
             'topic' => []
+        ];
+    } finally {
+        disconnect_db($conn, $statement);
+    }
+}
+
+function get_post_by_id(int $post_id)
+{
+    try {
+        $conn = connect_db();
+
+        $statement = $conn->prepare("SELECT posts.id, owner, users.username, content, created, posts.topic FROM posts INNER JOIN users ON users.id = posts.owner WHERE posts.id = ?;");
+        $statement->bind_param('i', $post_id);
+
+        if (!$statement->execute())
+            throw new Exception("Failed to execute statement");
+
+        $statement->bind_result($post_id, $owner, $username, $content, $created, $topic);
+        $statement->fetch();
+
+        if (!$post_id)
+            throw new Exception("The specified post does not exist.");
+
+        return [
+            'success' => true,
+            'message' => "Topic retrieved successfully",
+            'post' => [
+                "username" => $username,
+                "owner" => $owner,
+                "post_id" => $post_id,
+                "content" => $content,
+                "created" => $created,
+                "topic" => $topic
+            ]
+        ];
+    } catch (Exception $e) {
+        return [
+            'success' => false,
+            'message' => $e->getMessage(),
+            'post' => []
         ];
     } finally {
         disconnect_db($conn, $statement);
@@ -655,6 +737,34 @@ function set_topic_lock(int $topic_id, int $locked)
     }
 }
 
+function set_topic_pin(int $topic_id, int $pinned)
+{
+    try {
+        if ($pinned !== 1 && $pinned !== 0)
+            throw new Exception("Invalid pin state '$pinned'.");
+
+        $conn = connect_db();
+
+        $statement = $conn->prepare("UPDATE topic SET pinned = ? WHERE id = ?");
+        $statement->bind_param("ii", $pinned, $topic_id);
+
+        if (!$statement->execute())
+            throw new Exception("Failed to execute statement");
+
+        return [
+            "success" => true,
+            "message" => "Topic updated successfully"
+        ];
+    } catch (Exception $e) {
+        return [
+            "success" => false,
+            "message" => $e->getMessage()
+        ];
+    } finally {
+        disconnect_db($conn, $statement);
+    }
+}
+
 // DELETE
 
 function delete_category(int $category_id)
@@ -696,6 +806,31 @@ function delete_post(int $post_id)
         return [
             "success" => true,
             "message" => "Post deleted successfully",
+        ];
+    } catch (Exception $e) {
+        return [
+            "success" => false,
+            "message" => $e->getMessage()
+        ];
+    } finally {
+        disconnect_db($conn, $statement);
+    }
+}
+
+function delete_topic(int $topic_id)
+{
+    try {
+        $conn = connect_db();
+
+        $statement = $conn->prepare("DELETE FROM topic WHERE id = ?");
+        $statement->bind_param("i", $topic_id);
+
+        if (!$statement->execute())
+            throw new Error("Failed to execute statement");
+
+        return [
+            "success" => true,
+            "message" => "Topic deleted successfully",
         ];
     } catch (Exception $e) {
         return [

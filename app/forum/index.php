@@ -20,6 +20,12 @@ if (!$topics['success']) {
     $errors[] = $topics['message'];
 }
 
+$pinned = get_pinned_topics();
+
+if (!$pinned['success']) {
+    $errors[] = $pinned['message'];
+}
+
 $posts = get_all_posts();
 
 if (!$posts['success']) {
@@ -31,7 +37,7 @@ if (count($errors) > 0) {
         "Failed to load forums",
         implode(", ", $errors)
     );
-    
+
     die;
 }
 
@@ -61,6 +67,32 @@ if (count($errors) > 0) {
                             your heart desires, from the comfort of your personal computer!</p>
                     </div>
                     <br>
+                    <?php if (count($pinned['items'])): ?>
+                        <table border="0" cellpadding="2" cellspacing="2" bgcolor="#fff6d4" width="100%">
+                            <tr bgcolor="#ffe680">
+                                <td><b>Pinned topics</b></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <table border="0" cellspacing="6" width="100%">
+                                        <?php foreach ($pinned['items'] as $topic): ?>
+                                            <tr>
+                                                <td valign="top"><img src="../assets/book.gif" alt=""></td>
+                                                <td>
+                                                    <h2>
+                                                        <a href="view_topic.php?id=<?= $topic["id"] ?>">
+                                                            <?= $topic['title'] ?>
+                                                        </a>
+                                                    </h2>
+                                                    <p><?= str_replace("\n", "<br>", $topic['content']) ?></p>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    <?php endif; ?>
                     <table border="0" cellpadding="2" cellspacing="2" bgcolor="#fff6d4" width="100%">
                         <tr bgcolor="#ffe680">
                             <td><b>Forum Categories</b></td>
@@ -98,9 +130,10 @@ if (count($errors) > 0) {
                         <tr>
                             <td>
                                 <ul>
-                                    <li><?= count($categories['items']) ?> categories</li>
-                                    <li><?= count($topics['items']) ?> topics</li>
-                                    <li><?= count($posts['items']) ?> posts</li>
+                                    <li><img src="../assets/symbols/books.gif" alt=""> <b><?= count($categories['items']) ?></b> categories</li>
+                                    <li><img src="../assets/symbols/book.gif" alt=""> <b><?= count($topics['items']) ?></b> topics</li>
+                                    <li><img src="../assets/symbols/pin.gif" alt=""> <b><?= count($pinned['items']) ?></b> pinned topics</li>
+                                    <li><img src="../assets/symbols/file.gif" alt=""> <b><?= count($posts['items']) ?></b> posts</li>
                                 </ul>
                             </td>
                         </tr>

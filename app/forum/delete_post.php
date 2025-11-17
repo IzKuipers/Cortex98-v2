@@ -17,7 +17,7 @@ if (!isset($_GET["id"])) {
 
 $id = $_GET["id"];
 
-$existing = get_post_by_id($id);
+$existing = get_post_by_id(intval($id));
 
 if (!$existing['success']) {
     error_message(

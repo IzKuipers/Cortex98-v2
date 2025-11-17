@@ -25,7 +25,7 @@ function verify_loggedin(bool $require_admin = false)
                 "Access denied",
                 "You do not have permission to access this part of Cortex 98. Please contact an administrator if you believe this to be an error."
             );
-            
+
             die;
         }
     } catch (Exception $e) {
@@ -50,6 +50,8 @@ function get_user_from_token(string $token): ?array
 
     $statement->bind_result($id, $username, $password, $admin);
     $statement->fetch();
+
+    if (!$id) return null;
 
     disconnect_db($conn, $statement);
 
