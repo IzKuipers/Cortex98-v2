@@ -101,7 +101,7 @@ if (count($errors) > 0) {
                             <td>
                                 <table border="0" cellspacing="6" width="100%">
                                     <?php foreach ($categories["items"] as $category): ?>
-                                        <?php $topics = get_category_topics($category["id"]) ?>
+                                        <?php $category_topics = get_category_topics($category["id"]) ?>
                                         <tr>
                                             <td valign="top"><img src="../assets/books.gif" alt=""></td>
                                             <td>
@@ -112,7 +112,7 @@ if (count($errors) > 0) {
                                                 </h2>
                                                 <p><?= $category['description'] ?></p>
                                                 <p style="margin-top: 5px; color: gray; margin-bottom: 10px;">
-                                                    <?= count($topics['items']) ?> topics
+                                                    <?= count($category_topics['items']) ?> topics
                                                 </p>
                                             </td>
                                         </tr>
