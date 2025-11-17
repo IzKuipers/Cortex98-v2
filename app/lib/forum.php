@@ -338,12 +338,12 @@ function get_all_topics()
 {
     try {
         $conn = connect_db();
-        $statement = $conn->prepare("SELECT t.id, u.username, t.title, p.id AS post_id, p.content, p.created, locked FROM topic t JOIN users u ON u.id = t.owner JOIN posts p ON p.topic = t.id ORDER BY t.created ASC;");
+        $statement = $conn->prepare("SELECT t.id, t.owner, u.username, t.title, p.id AS post_id, p.content, p.created, locked FROM topic t JOIN users u ON u.id = t.owner JOIN posts p ON p.topic = t.id ORDER BY t.created ASC;");
 
         if (!$statement->execute())
             throw new Error("Failed to execute statement");
 
-        $statement->bind_result($id, $owner, $username, $created, $content, $title, $locked);
+        $statement->bind_result($id, $owner, $username, $title, $post_id, $content, $created, $locked);
 
         $result = [];
 
