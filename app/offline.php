@@ -9,6 +9,7 @@ require_once(__DIR__ . "/components/headerbar.php");
 
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="css/main.css">
     <title>Offline! - Cortex 98</title>
 </head>
 
